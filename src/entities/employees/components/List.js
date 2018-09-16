@@ -31,7 +31,8 @@ const styles = theme => ({
 class List extends Component {
   info = ({ row }) => {
     const { firstname, lastname, birthday, gender, phone, email } = row;
-    const { root, infoActions, btnActions } = this.props.classes;
+    const { classes, onEditForm, onDelete } = this.props;
+    const { root, infoActions, btnActions } = classes;
     return (
       <Paper className={root}>
         <Grid container>
@@ -61,11 +62,20 @@ class List extends Component {
         </Grid>
         <Grid container className={infoActions}>
           <Grid item container xs={12} justify="center">
-            <Button variant="outlined" className={btnActions}>
-              삭제
-            </Button>
-            <Button variant="outlined" color="primary" className={btnActions}>
+            <Button
+              onClick={() => onEditForm(row)}
+              variant="outlined"
+              color="primary"
+              className={btnActions}
+            >
               수정
+            </Button>
+            <Button
+              onClick={onDelete}
+              variant="outlined"
+              className={btnActions}
+            >
+              삭제
             </Button>
           </Grid>
         </Grid>

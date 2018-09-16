@@ -4,6 +4,15 @@ import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 
 export const columns = [
   {
+    Header: "UID",
+    accessor: "uid",
+    show: false
+  },
+  {
+    Header: "로그인ID",
+    accessor: "id"
+  },
+  {
     Header: "이름",
     accessor: "firstname"
   },
@@ -31,8 +40,7 @@ export const columns = [
   },
   {
     expander: true,
-    Header: "더보기",
-    width: 65,
+    width: 32,
     Expander: ({ isExpanded }) =>
       isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />
   }

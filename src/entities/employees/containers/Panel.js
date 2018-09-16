@@ -23,6 +23,7 @@ class Panel extends Component {
   state = {
     formOpen: false
   };
+  //===========================================================================
 
   /**
    * 목록 관련 이벤트.
@@ -79,6 +80,28 @@ class Panel extends Component {
   };
   //===========================================================================
 
+  /**
+   * 수정폼 관련 이벤트.
+   */
+  handleOpenEditForm = row => {
+    const { FormActions } = this.props;
+    FormActions.loadEmployee({
+      info: {
+        uid: row.uid,
+        firstname: row.firstname,
+        lastname: row.lastname,
+        birthday: row.birthday,
+        gender: row.gender,
+        phone: row.phone,
+        email: row.email
+      }
+    });
+    this.setState({
+      formOpen: true
+    });
+  };
+  //===========================================================================
+
   render() {
     const { formOpen } = this.state;
     const { classes, form, list, pages, loading } = this.props;
@@ -88,7 +111,8 @@ class Panel extends Component {
       handleOpenForm,
       handleChangeInput,
       handleSubmit,
-      handleCloseForm
+      handleCloseForm,
+      handleOpenEditForm
     } = this;
     return (
       <section className={contentWrap}>
@@ -98,6 +122,7 @@ class Panel extends Component {
           pages={pages}
           listLoading={loading}
           onFetchData={handlePetchData}
+          onEditForm={handleOpenEditForm}
         />
         <Form
           form={form.toJS()}
