@@ -7,11 +7,11 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import MenuItem from "@material-ui/core/MenuItem";
-import MaskedInput from "react-text-mask";
 
 import { withStyles } from "@material-ui/core/styles";
 
-import { TextFieldWrap } from "support/wrapper";
+import { Input } from "support/wrapper";
+import { HpMaskedInput } from "support/wrapper/maskedinput";
 
 const styles = theme => ({
   container: {
@@ -52,35 +52,7 @@ class Form extends Component {
     gender: "10"
   };
   //===========================================================================
-  TextMaskCustom = props => {
-    const { inputRef, ...other } = props;
-    return (
-      <MaskedInput
-        {...other}
-        ref={inputRef}
-        mask={[
-          /\d/,
-          /\d/,
-          /\d/,
-          "-",
-          /\d/,
-          /\d/,
-          /\d/,
-          /\d/,
-          "-",
-          /\d/,
-          /\d/,
-          /\d/,
-          /\d/
-        ]}
-        placeholderChar={"\u2000"}
-        showMask
-      />
-    );
-  };
-  //===========================================================================
   render() {
-    const { TextMaskCustom } = this;
     const {
       classes,
       form,
@@ -102,7 +74,7 @@ class Form extends Component {
             사원 등록후 바로 사이트에 접속 가능합니다.
           </DialogContentText>
           <form autoComplete="off">
-            <TextFieldWrap
+            <Input
               required
               minLength={6}
               maxLength={20}
@@ -113,14 +85,14 @@ class Form extends Component {
               className={textFieldFirst}
               autoFocus={true}
             />
-            <TextFieldWrap
+            <Input
               disabled
               name="pw"
               label="비밀번호"
               type="password"
               className={textField}
             />
-            <TextFieldWrap
+            <Input
               required
               maxLength={20}
               name="firstname"
@@ -129,7 +101,7 @@ class Form extends Component {
               onChangeInput={onChangeInput}
               className={textFieldFirst}
             />
-            <TextFieldWrap
+            <Input
               required
               maxLength={20}
               name="lastname"
@@ -138,7 +110,7 @@ class Form extends Component {
               onChangeInput={onChangeInput}
               className={textField}
             />
-            <TextFieldWrap
+            <Input
               required
               isDate
               name="birthday"
@@ -151,7 +123,7 @@ class Form extends Component {
                 shrink: true
               }}
             />
-            <TextFieldWrap
+            <Input
               required
               name="gender"
               label="성별"
@@ -165,22 +137,23 @@ class Form extends Component {
                   {option.label}
                 </MenuItem>
               ))}
-            </TextFieldWrap>
-            <TextFieldWrap
+            </Input>
+            <Input
               required
+              isHp
               name="phone"
               label="연락처(HP)"
               value={form.phone}
               onChangeInput={onChangeInput}
               className={textFieldFirst}
               InputProps={{
-                inputComponent: TextMaskCustom
+                inputComponent: HpMaskedInput
               }}
               InputLabelProps={{
                 shrink: true
               }}
             />
-            <TextFieldWrap
+            <Input
               required
               isEmail
               name="email"

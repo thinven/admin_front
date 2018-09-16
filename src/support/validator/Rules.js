@@ -58,8 +58,8 @@ const validations = {
   isNumber: (value, label) =>
     validations.matchRegexp(value, label, /^-?[0-9]\d*(\d+)?$/i),
 
-  isFloat: value =>
-    validations.matchRegexp(value, /^(?:[1-9]\d*|0)?(?:\.\d+)?$/i),
+  isFloat: (value, label) =>
+    validations.matchRegexp(value, label, /^(?:[1-9]\d*|0)?(?:\.\d+)?$/i),
 
   isPositive: value => {
     if (isExisty(value)) {
@@ -108,7 +108,9 @@ const validations = {
     let msg = "";
     if (err) msg = label + " 형식(날짜)에 맞게 입력해 주세요.";
     return { err: err, errmsg: msg };
-  }
+  },
+  isHp: (value, label) =>
+    validations.matchRegexp(value, label, /^\d{3}-\d{3,4}-\d{4}$/i)
 };
 
 export default validations;

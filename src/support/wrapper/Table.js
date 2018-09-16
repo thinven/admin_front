@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 
-class ReactTableWrap extends Component {
+class Table extends Component {
   render() {
     const { ...other } = this.props;
     return (
@@ -27,4 +27,4 @@ class ReactTableWrap extends Component {
   }
 }
 
-export default ReactTableWrap;
+export default Table;

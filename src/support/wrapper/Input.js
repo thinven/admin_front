@@ -1,22 +1,21 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 
 import TextField from "@material-ui/core/TextField";
 
 import { Rules } from "support/validator";
 import { ValidatorConsumer } from "support/validator/Provider";
 
-class TextFieldWrap extends Component {
+class Input extends Component {
   state = {
     error: false,
     errmsg: ""
   };
   rules = {};
-  /////////////////////////////////////////////////////////////////////////////
+  //===========================================================================
   componentDidMount() {
     this.initComponent();
   }
-  /////////////////////////////////////////////////////////////////////////////
+  //===========================================================================
   initComponent = () => {
     Object.keys(Rules).map(rule => {
       if (this.props[rule]) {
@@ -56,10 +55,10 @@ class TextFieldWrap extends Component {
     });
     return result;
   };
-  /////////////////////////////////////////////////////////////////////////////
+  //===========================================================================
   render() {
     const { error, errmsg } = this.state;
-    const { onChangeInput, isEmail, isDate, ...other } = this.props;
+    const { onChangeInput, isEmail, isDate, isHp, ...other } = this.props;
     return (
       <ValidatorConsumer>
         {validator => {
@@ -80,8 +79,4 @@ class TextFieldWrap extends Component {
   }
 }
 
-TextFieldWrap.propTypes = {
-  isEmail: PropTypes.bool
-};
-
-export default TextFieldWrap;
+export default Input;
