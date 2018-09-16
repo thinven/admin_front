@@ -10,6 +10,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 
 import { withStyles } from "@material-ui/core/styles";
 
+import { ValidationForm } from "support/validator";
 import { Input } from "support/wrapper";
 import { HpMaskedInput } from "support/wrapper/maskedinput";
 
@@ -73,7 +74,7 @@ class Form extends Component {
           <DialogContentText>
             사원 등록후 바로 사이트에 접속 가능합니다.
           </DialogContentText>
-          <form autoComplete="off">
+          <ValidationForm onSubmit={onSubmit}>
             <Input
               required
               minLength={6}
@@ -163,15 +164,15 @@ class Form extends Component {
               onChangeInput={onChangeInput}
               className={textField}
             />
-          </form>
-          <DialogActions className={dialogActions}>
-            <Button onClick={onCloseForm} variant="outlined">
-              취소
-            </Button>
-            <Button onClick={onSubmit} variant="outlined" color="primary">
-              저장
-            </Button>
-          </DialogActions>
+            <DialogActions className={dialogActions}>
+              <Button onClick={onCloseForm} variant="outlined">
+                취소
+              </Button>
+              <Button type="submit" variant="outlined" color="primary">
+                저장
+              </Button>
+            </DialogActions>
+          </ValidationForm>
         </DialogContent>
       </Dialog>
     );

@@ -22,13 +22,16 @@ const styles = theme => ({
   },
   infoActions: {
     marginTop: 2 * theme.spacing.unit
+  },
+  btnActions: {
+    margin: theme.spacing.unit
   }
 });
 
 class List extends Component {
   info = ({ row }) => {
     const { firstname, lastname, birthday, gender, phone, email } = row;
-    const { root, infoActions } = this.props.classes;
+    const { root, infoActions, btnActions } = this.props.classes;
     return (
       <Paper className={root}>
         <Grid container>
@@ -56,11 +59,15 @@ class List extends Component {
             </Grid>
           </Grid>
         </Grid>
-        <Grid container justify="center" xs={12} className={infoActions}>
-          <Button variant="outlined">취소</Button>
-          <Button variant="outlined" color="primary">
-            저장
-          </Button>
+        <Grid container className={infoActions}>
+          <Grid item container xs={12} justify="center">
+            <Button variant="outlined" className={btnActions}>
+              삭제
+            </Button>
+            <Button variant="outlined" color="primary" className={btnActions}>
+              수정
+            </Button>
+          </Grid>
         </Grid>
       </Paper>
     );

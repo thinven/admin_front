@@ -6,7 +6,6 @@ import compose from "recompose/compose";
 
 import { withStyles } from "@material-ui/core/styles";
 
-import { ValidatorProvider } from "support/validator/Provider";
 import { Header, List, Form } from "../components";
 
 import * as listActions from "../store/list";
@@ -68,11 +67,9 @@ class Panel extends Component {
   handleSubmit = async () => {
     const { form, FormActions, ListActions } = this.props;
     try {
-      if (this.validator.validate()) {
-        await FormActions.addEmployee(form.toJS());
-        ListActions.addEmployee(form.toJS());
-        this.handleCloseForm();
-      }
+      await FormActions.addEmployee(form.toJS());
+      ListActions.addEmployee(form.toJS());
+      this.handleCloseForm();
     } catch (e) {
       console.log(e);
     }
@@ -102,15 +99,13 @@ class Panel extends Component {
           listLoading={loading}
           onFetchData={handlePetchData}
         />
-        <ValidatorProvider ref={ref => (this.validator = ref)}>
-          <Form
-            form={form.toJS()}
-            formOpen={formOpen}
-            onCloseForm={handleCloseForm}
-            onSubmit={handleSubmit}
-            onChangeInput={handleChangeInput}
-          />
-        </ValidatorProvider>
+        <Form
+          form={form.toJS()}
+          formOpen={formOpen}
+          onCloseForm={handleCloseForm}
+          onSubmit={handleSubmit}
+          onChangeInput={handleChangeInput}
+        />
       </section>
     );
   }
