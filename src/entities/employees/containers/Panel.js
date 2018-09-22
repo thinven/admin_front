@@ -56,6 +56,8 @@ class Panel extends Component {
    * 신규등록폼 관련 이벤트.
    */
   handleOpenForm = () => {
+    const { FormActions } = this.props;
+    FormActions.initialize();
     this.setState({
       formOpen: true
     });
@@ -66,11 +68,23 @@ class Panel extends Component {
     FormActions.changeInput({ name, value });
   };
   handleSubmit = async () => {
-    const { form, FormActions, ListActions } = this.props;
+    const { form, FormActions, ListActions, onSendMsg } = this.props;
     try {
-      await FormActions.addEmployee(form.toJS());
-      ListActions.addEmployee(form.toJS());
-      this.handleCloseForm();
+      if (form.uid) {
+        await FormActions.patchEmployee(form);
+      } else {
+        await FormActions.addEmployee(form);
+      }
+      if (this.props.result.key === "SUCCESS") {
+        if (form.uid) {
+          ListActions.patchEmployee(form);
+        } else {
+          ListActions.addEmployee(form);
+        }
+        this.handleCloseForm();
+      } else {
+        onSendMsg(this.props.result);
+      }
     } catch (e) {
       console.log(e);
     }
@@ -83,18 +97,10 @@ class Panel extends Component {
   /**
    * 수정폼 관련 이벤트.
    */
-  handleOpenEditForm = row => {
+  handleOpenEditForm = original => {
     const { FormActions } = this.props;
     FormActions.loadEmployee({
-      info: {
-        uid: row.uid,
-        firstname: row.firstname,
-        lastname: row.lastname,
-        birthday: row.birthday,
-        gender: row.gender,
-        phone: row.phone,
-        email: row.email
-      }
+      info: original
     });
     this.setState({
       formOpen: true
@@ -118,14 +124,14 @@ class Panel extends Component {
       <section className={contentWrap}>
         <Header onOpenForm={handleOpenForm} />
         <List
-          list={list.toJS()}
+          list={list}
           pages={pages}
           listLoading={loading}
           onFetchData={handlePetchData}
           onEditForm={handleOpenEditForm}
         />
         <Form
-          form={form.toJS()}
+          form={form}
           formOpen={formOpen}
           onCloseForm={handleCloseForm}
           onSubmit={handleSubmit}
@@ -140,10 +146,11 @@ export default compose(
   withStyles(styles, { name: "Panel" }),
   connect(
     ({ employeeList, employeeForm }) => ({
-      list: employeeList.get("list"),
+      list: employeeList.get("list").toJS(),
       pages: employeeList.get("pages"),
       loading: employeeList.get("loading"),
-      form: employeeForm.get("form")
+      form: employeeForm.get("form").toJS(),
+      result: employeeForm.get("result").toJS()
     }),
     dispatch => ({
       ListActions: bindActionCreators(listActions, dispatch),

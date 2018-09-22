@@ -29,7 +29,7 @@ const styles = theme => ({
 });
 
 class List extends Component {
-  info = ({ row }) => {
+  info = ({ original, row }) => {
     const { firstname, lastname, birthday, gender, phone, email } = row;
     const { classes, onEditForm, onDelete } = this.props;
     const { root, infoActions, btnActions } = classes;
@@ -63,7 +63,7 @@ class List extends Component {
         <Grid container className={infoActions}>
           <Grid item container xs={12} justify="center">
             <Button
-              onClick={() => onEditForm(row)}
+              onClick={() => onEditForm(original)}
               variant="outlined"
               color="primary"
               className={btnActions}

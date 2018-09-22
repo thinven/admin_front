@@ -13,33 +13,6 @@ const pke = "10001";
 let s = Object.assign({}, dft);
 
 const Security = {
-  encP: function(data) {
-    const RK = localStorage.getItem("RK");
-    if (typeof data === "object") {
-      data = Object.assign(
-        {},
-        data,
-        {
-          rk: RK || "guest"
-        } || {}
-      );
-      s = Object.assign({}, dft, data);
-    }
-    refreshKey();
-
-    let encrypted = encrypt(JSON.stringify(data));
-    //console.log("src : " + encrypted);
-    //let decrypted = decrypt(encrypted);
-    //console.log("det : " + decrypted);
-
-    var bodyFormData = new FormData();
-    bodyFormData.set("p1", encrypted);
-    bodyFormData.set("p2", encrypt2(kyhex + "," + ivhex));
-    bodyFormData.set("p3", encrypt3(RK || "guest"));
-    //console.log("data", data);
-    //console.log("bodyFormData", bodyFormData);
-    return data ? bodyFormData : data;
-  },
   encG: function(data) {
     const RK = localStorage.getItem("RK");
     if (typeof data === "object") {
@@ -66,6 +39,33 @@ const Security = {
           p3: encrypt3(RK || "guest")
         }
       : data;
+  },
+  encP: function(data) {
+    const RK = localStorage.getItem("RK");
+    if (typeof data === "object") {
+      data = Object.assign(
+        {},
+        data,
+        {
+          rk: RK || "guest"
+        } || {}
+      );
+      s = Object.assign({}, dft, data);
+    }
+    refreshKey();
+
+    let encrypted = encrypt(JSON.stringify(data));
+    //console.log("src : " + encrypted);
+    //let decrypted = decrypt(encrypted);
+    //console.log("det : " + decrypted);
+
+    var bodyFormData = new FormData();
+    bodyFormData.set("p1", encrypted);
+    bodyFormData.set("p2", encrypt2(kyhex + "," + ivhex));
+    bodyFormData.set("p3", encrypt3(RK || "guest"));
+    //console.log("data", data);
+    //console.log("bodyFormData", bodyFormData);
+    return data ? bodyFormData : data;
   }
 };
 
@@ -107,6 +107,7 @@ function decrypt(encrypted_str) {
   return decrypted.toString(CryptoJS.enc.Utf8);
 }
 */
+
 function refreshKey() {
   kyhex = generateKey();
   ivhex = generateKey();

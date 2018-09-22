@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 
 import AdminTemplate from "common/admin-template";
 import { Panel } from "./containers";
@@ -6,9 +6,11 @@ import { Panel } from "./containers";
 class PanelPage extends Component {
   render() {
     return (
-      <AdminTemplate>
-        <Panel />
-      </AdminTemplate>
+      <Fragment>
+        <AdminTemplate>
+          <Panel />
+        </AdminTemplate>
+      </Fragment>
     );
   }
 }

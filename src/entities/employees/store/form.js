@@ -9,15 +9,21 @@ const INITIALIZE = "employees/INITIALIZE";
 const CHANGE_INPUT = "employees/CHANGE_INPUT";
 const LOAD_EMPLOYEE = "employees/LOAD_EMPLOYEE";
 const ADD_EMPLOYEE = "employees/ADD_EMPLOYEE";
+const PATCH_EMPLOYEE = "employees/PATCH_EMPLOYEE";
 
 // action creators
 export const initialize = createAction(INITIALIZE);
 export const changeInput = createAction(CHANGE_INPUT);
 export const loadEmployee = createAction(LOAD_EMPLOYEE);
 export const addEmployee = createAction(ADD_EMPLOYEE, api.addEmployee);
+export const patchEmployee = createAction(PATCH_EMPLOYEE, api.patchEmployee);
 
 // initial state
 const initialState = Map({
+  result: Map({
+    key: "SUCCESS",
+    desc: ""
+  }),
   form: Map({
     uid: "",
     firstname: "",
@@ -40,14 +46,38 @@ export default handleActions(
     },
     [LOAD_EMPLOYEE]: (state, action) => {
       const { info } = action.payload;
-      console.log(info);
       return state.set("form", Map(info));
     },
     ...pender({
       type: ADD_EMPLOYEE,
       onSuccess: (state, action) => {
-        const { employee } = action.payload.data;
-        return state.setIn(["form", "uid"], employee.uid);
+        const { key, desc, employee } = action.payload.data;
+        if (key === "SUCCESS") {
+          return state
+            .setIn(["form", "uid"], employee.uid)
+            .setIn(["result", "key"], key)
+            .setIn(["result", "desc"], desc);
+        } else {
+          return state
+            .setIn(["result", "key"], key)
+            .setIn(["result", "desc"], desc);
+        }
+      }
+    }),
+    ...pender({
+      type: PATCH_EMPLOYEE,
+      onSuccess: (state, action) => {
+        const { key, desc, employee } = action.payload.data;
+        if (key === "SUCCESS") {
+          return state
+            .setIn(["form", "uid"], employee.uid)
+            .setIn(["result", "key"], key)
+            .setIn(["result", "desc"], desc);
+        } else {
+          return state
+            .setIn(["result", "key"], key)
+            .setIn(["result", "desc"], desc);
+        }
       }
     })
   },
