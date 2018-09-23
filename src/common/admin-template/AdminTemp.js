@@ -5,7 +5,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Header from "./HeaderComp";
 import SideBar from "./SideBarComp";
 
-import { Message } from "support/wrapper";
+import { Message, Confirm } from "support/wrapper";
 
 const styles = theme => ({
   root: {
@@ -55,13 +55,19 @@ class AdminTemplate extends Component {
       msgOpen: false
     });
   };
+  handleConfirm = actions => {
+    this.alert.handleOpen(actions);
+  };
   render() {
     const { handleDrawerOpen, handleDrawerClose, handleCloseMsg } = this;
     const { drawerOpen, msgOpen, desc } = this.state;
     const { classes, children } = this.props;
     const { root, content, toolbar } = classes;
     const childrenWithProps = React.Children.map(children, child =>
-      React.cloneElement(child, { onSendMsg: this.handleSendMsg })
+      React.cloneElement(child, {
+        onSendMsg: this.handleSendMsg,
+        onConfirm: this.handleConfirm
+      })
     );
     return (
       <Fragment>
@@ -74,6 +80,7 @@ class AdminTemplate extends Component {
           </main>
         </section>
         <Message open={msgOpen} desc={desc} onClose={handleCloseMsg} />
+        <Confirm ref={ref => (this.alert = ref)} />
       </Fragment>
     );
   }

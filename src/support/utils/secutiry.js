@@ -34,7 +34,7 @@ const Security = {
 
     return data
       ? {
-          p1: encrypted,
+          p1: encrypted.toString(),
           p2: encrypt2(kyhex + "," + ivhex),
           p3: encrypt3(RK || "guest")
         }
@@ -60,7 +60,7 @@ const Security = {
     //console.log("det : " + decrypted);
 
     var bodyFormData = new FormData();
-    bodyFormData.set("p1", encrypted);
+    bodyFormData.set("p1", encrypted.toString());
     bodyFormData.set("p2", encrypt2(kyhex + "," + ivhex));
     bodyFormData.set("p3", encrypt3(RK || "guest"));
     //console.log("data", data);

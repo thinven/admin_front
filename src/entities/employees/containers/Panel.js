@@ -108,6 +108,29 @@ class Panel extends Component {
   };
   //===========================================================================
 
+  /**
+   * 삭제 관련 이벤트.
+   */
+  handleDeleteConfirm = original => {
+    const { FormActions, ListActions, onConfirm } = this.props;
+    FormActions.loadEmployee({
+      info: original
+    });
+    onConfirm({
+      title: "삭제 알림",
+      desc: original.id + "님을 삭제 하시겠습니까?",
+      onOk: async () => {
+        try {
+          await FormActions.delEmployee(original);
+          ListActions.delEmployee(original);
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    });
+  };
+  //===========================================================================
+
   render() {
     const { formOpen } = this.state;
     const { classes, form, list, pages, loading } = this.props;
@@ -118,7 +141,8 @@ class Panel extends Component {
       handleChangeInput,
       handleSubmit,
       handleCloseForm,
-      handleOpenEditForm
+      handleOpenEditForm,
+      handleDeleteConfirm
     } = this;
     return (
       <section className={contentWrap}>
@@ -129,6 +153,7 @@ class Panel extends Component {
           listLoading={loading}
           onFetchData={handlePetchData}
           onEditForm={handleOpenEditForm}
+          onDeleteConfirm={handleDeleteConfirm}
         />
         <Form
           form={form}

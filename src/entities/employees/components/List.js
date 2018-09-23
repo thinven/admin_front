@@ -31,7 +31,7 @@ const styles = theme => ({
 class List extends Component {
   info = ({ original, row }) => {
     const { firstname, lastname, birthday, gender, phone, email } = row;
-    const { classes, onEditForm, onDelete } = this.props;
+    const { classes, onEditForm, onDeleteConfirm } = this.props;
     const { root, infoActions, btnActions } = classes;
     return (
       <Paper className={root}>
@@ -71,7 +71,7 @@ class List extends Component {
               수정
             </Button>
             <Button
-              onClick={onDelete}
+              onClick={() => onDeleteConfirm(original)}
               variant="outlined"
               className={btnActions}
             >

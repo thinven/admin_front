@@ -8,6 +8,7 @@ import * as api from "./api";
 const INITIALIZE = "list/INITIALIZE";
 const ADD_EMPLOYEE = "list/ADD_EMPLOYEE";
 const PATCH_EMPLOYEE = "list/PATCH_EMPLOYEE";
+const DEL_EMPLOYEE = "list/DEL_EMPLOYEE";
 const START_LOADING = "list/START_LOADING";
 const GET_EMPLOYEES = "list/GET_EMPLOYEES";
 
@@ -15,6 +16,7 @@ const GET_EMPLOYEES = "list/GET_EMPLOYEES";
 export const initialize = createAction(INITIALIZE);
 export const addEmployee = createAction(ADD_EMPLOYEE);
 export const patchEmployee = createAction(PATCH_EMPLOYEE);
+export const delEmployee = createAction(DEL_EMPLOYEE);
 export const startLoading = createAction(START_LOADING);
 export const getEmployees = createAction(GET_EMPLOYEES, api.getEmployees);
 
@@ -47,6 +49,18 @@ export default handleActions(
           function(item) {
             return fromJS(action.payload);
           }
+        )
+      );
+    },
+    [DEL_EMPLOYEE]: (state, action) => {
+      const { uid } = action.payload;
+      let list = state.get("list");
+      return state.set(
+        "list",
+        list.delete(
+          list.findIndex(function(item) {
+            return item.get("uid") === uid;
+          })
         )
       );
     },
