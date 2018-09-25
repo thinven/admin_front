@@ -11,8 +11,7 @@ import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
 
 import { ValidationForm } from "support/validator";
-import { Input } from "support/wrapper";
-import { HpMaskedInput } from "support/wrapper/maskedinput";
+import { Input, AutoComplete } from "support/wrapper";
 
 const styles = theme => ({
   container: {
@@ -30,14 +29,14 @@ const styles = theme => ({
   }
 });
 
-const genders = [
+const uses = [
   {
     value: 10,
-    label: "남"
+    label: "예"
   },
   {
     value: 20,
-    label: "여"
+    label: "아니요"
   }
 ];
 
@@ -53,7 +52,9 @@ class Form extends Component {
       formOpen,
       onCloseForm,
       onSubmit,
-      onChangeInput
+      onChangeInput,
+      onLoadOptions,
+      onAutoCompleteChange
     } = this.props;
     const { buttonWrap, button } = classes;
     return (
@@ -62,50 +63,47 @@ class Form extends Component {
         aria-labelledby="simple-dialog-title"
         open={formOpen}
       >
-        <DialogTitle id="simple-dialog-title">사원 등록</DialogTitle>
+        <DialogTitle id="simple-dialog-title">공통코드 등록</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            사원 등록후 바로 사이트에 접속 가능합니다.
-            <br />첫 비밀번호는 아이디와 동일하게 세팅 됩니다.
+            등록된 코드는 와스 재기동후에야 정상적으로 동작합니다.
+            <br />
+            코드는 숫자로만 기입해 주세요.
           </DialogContentText>
           <ValidationForm onSubmit={onSubmit}>
             <Input type="hidden" name="uid" value={form.uid} />
             <Grid container>
               <Grid item container xs={12}>
+                <AutoComplete
+                  label={"공통코드그룹"}
+                  placeholder={"입력문자열로 자동검색합니다."}
+                  name={"bcg"}
+                  value={{ label: form.bcgn, value: form.bcgu }}
+                  loadOptions={onLoadOptions}
+                  onChanges={onAutoCompleteChange}
+                  maxMenuHeight={150}
+                />
+              </Grid>
+              <Grid item container xs={12}>
                 <Grid item container xs={6}>
                   <Input
                     required
-                    minLength={6}
+                    isNumber
                     maxLength={20}
-                    name="id"
-                    label="로그인ID"
-                    value={form.id}
+                    name="code"
+                    label="코드"
+                    value={form.code}
                     onChangeInput={onChangeInput}
                     autoFocus={true}
                   />
                 </Grid>
                 <Grid item container xs={6}>
-                  <Input disabled name="pw" label="비밀번호" type="password" />
-                </Grid>
-              </Grid>
-              <Grid item container xs={12}>
-                <Grid item container xs={6}>
                   <Input
                     required
                     maxLength={20}
-                    name="firstname"
-                    label="이름"
-                    value={form.firstname}
-                    onChangeInput={onChangeInput}
-                  />
-                </Grid>
-                <Grid item container xs={6}>
-                  <Input
-                    required
-                    maxLength={20}
-                    name="lastname"
-                    label="성"
-                    value={form.lastname}
+                    name="name"
+                    label="코드명"
+                    value={form.name}
                     onChangeInput={onChangeInput}
                   />
                 </Grid>
@@ -114,61 +112,28 @@ class Form extends Component {
                 <Grid item container xs={6}>
                   <Input
                     required
-                    isDate
-                    name="birthday"
-                    label="생일"
-                    type="date"
-                    value={form.birthday}
+                    isNumber
+                    name="ordered"
+                    label="순서"
+                    value={form.ordered}
                     onChangeInput={onChangeInput}
-                    InputLabelProps={{
-                      shrink: true
-                    }}
                   />
                 </Grid>
                 <Grid item container xs={6}>
                   <Input
                     required
-                    name="gender"
-                    label="성별"
-                    value={form.gender}
+                    name="use"
+                    label="사용여부"
+                    value={form.use}
                     onChangeInput={onChangeInput}
                     select
                   >
-                    {genders.map(option => (
+                    {uses.map(option => (
                       <MenuItem key={option.value} value={option.value}>
                         {option.label}
                       </MenuItem>
                     ))}
                   </Input>
-                </Grid>
-              </Grid>
-              <Grid item container xs={12}>
-                <Grid item container xs={6}>
-                  <Input
-                    required
-                    isHp
-                    name="phone"
-                    label="연락처(HP)"
-                    value={form.phone}
-                    onChangeInput={onChangeInput}
-                    InputProps={{
-                      inputComponent: HpMaskedInput
-                    }}
-                    InputLabelProps={{
-                      shrink: true
-                    }}
-                  />
-                </Grid>
-                <Grid item container xs={6}>
-                  <Input
-                    required
-                    isEmail
-                    name="email"
-                    label="이메일"
-                    type="email"
-                    value={form.email}
-                    onChangeInput={onChangeInput}
-                  />
                 </Grid>
               </Grid>
             </Grid>

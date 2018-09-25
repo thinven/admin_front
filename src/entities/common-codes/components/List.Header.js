@@ -9,34 +9,24 @@ export const columns = [
     show: false
   },
   {
-    Header: "로그인ID",
-    accessor: "id"
+    Header: "공통코드그룹명",
+    accessor: "commonCodeGroup.name"
   },
   {
-    Header: "이름",
-    accessor: "firstname"
+    Header: "코드",
+    accessor: "code"
   },
   {
-    Header: "성",
-    accessor: "lastname"
+    Header: "코드명",
+    accessor: "name"
   },
   {
-    Header: "생일",
-    accessor: "birthday",
-    show: false
+    Header: "순서",
+    accessor: "ordered"
   },
   {
-    Header: "성별",
-    accessor: "gender",
-    show: false
-  },
-  {
-    Header: "핸드폰",
-    accessor: "phone"
-  },
-  {
-    Header: "이메일",
-    accessor: "email"
+    Header: "사용여부",
+    accessor: "use"
   },
   {
     expander: true,

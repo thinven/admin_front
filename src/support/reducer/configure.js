@@ -1,9 +1,13 @@
 import { createStore, applyMiddleware, compose, combineReducers } from "redux";
 import penderMiddleware from "redux-pender";
 
+import * as commonCodeGroups from "entities/common-code-groups/store";
+import * as commonCodes from "entities/common-codes/store";
 import * as employees from "entities/employees/store";
 
-const reducers = combineReducers(employees);
+const allReducers = Object.assign({}, commonCodeGroups, commonCodes, employees);
+
+const reducers = combineReducers(allReducers);
 const middlewares = [penderMiddleware()];
 
 // 개발 모드일 때만 Redux Devtools를 적용합니다.

@@ -1,9 +1,18 @@
 import React, { Component } from "react";
 
 import TextField from "@material-ui/core/TextField";
+import { withStyles } from "@material-ui/core/styles";
 
 import { Rules } from "support/validator";
 import { ValidatorConsumer } from "support/validator/Provider";
+
+const styles = theme => ({
+  input: {
+    marginRight: theme.spacing.unit,
+    marginBottom: theme.spacing.unit,
+    width: "100%"
+  }
+});
 
 class Input extends Component {
   state = {
@@ -58,7 +67,17 @@ class Input extends Component {
   //===========================================================================
   render() {
     const { error, errmsg } = this.state;
-    const { onChangeInput, isEmail, isDate, isHp, ...other } = this.props;
+    const {
+      onChangeInput,
+      isEmail,
+      isDate,
+      isHp,
+      isNumber,
+      classes,
+      type,
+      ...other
+    } = this.props;
+    const { input } = classes;
     return (
       <ValidatorConsumer>
         {validator => {
@@ -70,6 +89,8 @@ class Input extends Component {
               helperText={errmsg}
               onChange={this.validate}
               onKeyUp={this.validate}
+              type={type}
+              className={type === "hidden" ? "" : input}
               {...other}
             />
           );
@@ -79,4 +100,4 @@ class Input extends Component {
   }
 }
 
-export default Input;
+export default withStyles(styles)(Input);
