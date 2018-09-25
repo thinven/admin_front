@@ -30,17 +30,6 @@ const styles = theme => ({
   }
 });
 
-const genders = [
-  {
-    value: 10,
-    label: "남"
-  },
-  {
-    value: 20,
-    label: "여"
-  }
-];
-
 class Form extends Component {
   state = {
     gender: "10"
@@ -50,6 +39,7 @@ class Form extends Component {
     const {
       classes,
       form,
+      genderCodes,
       formOpen,
       onCloseForm,
       onSubmit,
@@ -134,8 +124,8 @@ class Form extends Component {
                     onChangeInput={onChangeInput}
                     select
                   >
-                    {genders.map(option => (
-                      <MenuItem key={option.value} value={option.value}>
+                    {genderCodes.map(option => (
+                      <MenuItem key={option.value} value={option.value * 1}>
                         {option.label}
                       </MenuItem>
                     ))}

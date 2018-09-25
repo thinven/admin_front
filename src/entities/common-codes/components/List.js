@@ -84,13 +84,20 @@ class List extends Component {
   };
   //===========================================================================
   render() {
-    const { classes, list, pages, listLoading, onFetchData } = this.props;
+    const {
+      classes,
+      list,
+      pages,
+      listLoading,
+      onFetchData,
+      useCodes
+    } = this.props;
     const { listWrap } = classes;
 
     return (
       <div className={listWrap}>
         <Table
-          columns={columns}
+          columns={columns(useCodes)}
           data={list}
           pages={pages}
           loading={listLoading}

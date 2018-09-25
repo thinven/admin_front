@@ -29,26 +29,13 @@ const styles = theme => ({
   }
 });
 
-const uses = [
-  {
-    value: 10,
-    label: "예"
-  },
-  {
-    value: 20,
-    label: "아니요"
-  }
-];
-
 class Form extends Component {
-  state = {
-    gender: "10"
-  };
   //===========================================================================
   render() {
     const {
       classes,
       form,
+      useCodes,
       formOpen,
       onCloseForm,
       onSubmit,
@@ -57,6 +44,7 @@ class Form extends Component {
       onAutoCompleteChange
     } = this.props;
     const { buttonWrap, button } = classes;
+
     return (
       <Dialog
         onClose={onCloseForm}
@@ -128,8 +116,8 @@ class Form extends Component {
                     onChangeInput={onChangeInput}
                     select
                   >
-                    {uses.map(option => (
-                      <MenuItem key={option.value} value={option.value}>
+                    {useCodes.map(option => (
+                      <MenuItem key={option.value} value={option.value * 1}>
                         {option.label}
                       </MenuItem>
                     ))}

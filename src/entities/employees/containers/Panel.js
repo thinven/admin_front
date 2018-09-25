@@ -133,7 +133,7 @@ class Panel extends Component {
 
   render() {
     const { formOpen } = this.state;
-    const { classes, form, list, pages, loading } = this.props;
+    const { classes, form, list, pages, loading, genderCodes } = this.props;
     const { contentWrap } = classes;
     const {
       handlePetchData,
@@ -150,6 +150,7 @@ class Panel extends Component {
         <List
           list={list}
           pages={pages}
+          genderCodes={genderCodes}
           listLoading={loading}
           onFetchData={handlePetchData}
           onEditForm={handleOpenEditForm}
@@ -157,6 +158,7 @@ class Panel extends Component {
         />
         <Form
           form={form}
+          genderCodes={genderCodes}
           formOpen={formOpen}
           onCloseForm={handleCloseForm}
           onSubmit={handleSubmit}
@@ -172,6 +174,7 @@ export default compose(
   connect(
     ({ employeeList, employeeForm }) => ({
       list: employeeList.get("list").toJS(),
+      genderCodes: employeeList.get("genderCodes").toJS(),
       pages: employeeList.get("pages"),
       loading: employeeList.get("loading"),
       form: employeeForm.get("form").toJS(),

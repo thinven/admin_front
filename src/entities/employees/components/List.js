@@ -31,7 +31,7 @@ const styles = theme => ({
 class List extends Component {
   info = ({ original, row }) => {
     const { firstname, lastname, birthday, gender, phone, email } = row;
-    const { classes, onEditForm, onDeleteConfirm } = this.props;
+    const { classes, onEditForm, onDeleteConfirm, genderCodes } = this.props;
     const { root, infoActions, btnActions } = classes;
     return (
       <Paper className={root}>
@@ -53,7 +53,12 @@ class List extends Component {
               <ReadOnly label="성" defaultValue={lastname} />
             </Grid>
             <Grid item xs={12}>
-              <ReadOnly label="성별" defaultValue={gender} />
+              <ReadOnly
+                label="성별"
+                defaultValue={
+                  genderCodes.filter(code => code.value * 1 === gender)[0].label
+                }
+              />
             </Grid>
             <Grid item xs={12}>
               <ReadOnly label="이메일" defaultValue={email} />

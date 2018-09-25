@@ -154,7 +154,7 @@ class Panel extends Component {
 
   render() {
     const { formOpen } = this.state;
-    const { classes, form, list, pages, loading } = this.props;
+    const { classes, form, list, pages, loading, useCodes } = this.props;
     const { contentWrap } = classes;
     const {
       handlePetchData,
@@ -173,6 +173,7 @@ class Panel extends Component {
         <List
           list={list}
           pages={pages}
+          useCodes={useCodes}
           listLoading={loading}
           onFetchData={handlePetchData}
           onEditForm={handleOpenEditForm}
@@ -180,6 +181,7 @@ class Panel extends Component {
         />
         <Form
           form={form}
+          useCodes={useCodes}
           formOpen={formOpen}
           onCloseForm={handleCloseForm}
           onSubmit={handleSubmit}
@@ -197,9 +199,10 @@ export default compose(
   connect(
     ({ commonCodeList, commonCodeForm, commonCodeGroupList }) => ({
       list: commonCodeList.get("list").toJS(),
-      groupList: commonCodeGroupList.get("list").toJS(),
+      useCodes: commonCodeList.get("useCodes").toJS(),
       pages: commonCodeList.get("pages"),
       loading: commonCodeList.get("loading"),
+      groupList: commonCodeGroupList.get("list").toJS(),
       form: commonCodeForm.get("form").toJS(),
       info: commonCodeForm.get("info").toJS(),
       result: commonCodeForm.get("result").toJS()

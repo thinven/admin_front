@@ -23,6 +23,7 @@ export const getEmployees = createAction(GET_EMPLOYEES, api.getEmployees);
 // initial state
 const initialState = Map({
   list: List(),
+  genderCodes: List(),
   pages: null,
   loading: false
 });
@@ -70,9 +71,14 @@ export default handleActions(
     ...pender({
       type: GET_EMPLOYEES,
       onSuccess: (state, action) => {
-        const { employeeList, employeePages } = action.payload.data;
+        const {
+          employeeList,
+          employeePages,
+          genderCodes
+        } = action.payload.data;
         return state
           .set("list", fromJS(employeeList))
+          .set("genderCodes", fromJS(genderCodes))
           .set("pages", employeePages)
           .set("loading", false);
       }

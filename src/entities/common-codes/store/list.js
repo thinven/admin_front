@@ -23,6 +23,7 @@ export const getCommonCodes = createAction(GET_COMMONCODES, api.getCommonCodes);
 // initial state
 const initialState = Map({
   list: List(),
+  useCodes: List(),
   pages: null,
   loading: false
 });
@@ -70,9 +71,14 @@ export default handleActions(
     ...pender({
       type: GET_COMMONCODES,
       onSuccess: (state, action) => {
-        const { commonCodeList, commonCodePages } = action.payload.data;
+        const {
+          commonCodeList,
+          commonCodePages,
+          useCodes
+        } = action.payload.data;
         return state
           .set("list", fromJS(commonCodeList))
+          .set("useCodes", fromJS(useCodes))
           .set("pages", commonCodePages)
           .set("loading", false);
       }
