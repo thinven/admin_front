@@ -80,7 +80,7 @@ class Panel extends Component {
     const { handleOpenForm, handleOpenEditForm, handleDeleteConfirm } = this;
     return (
       <section className={contentWrap}>
-        <Header onOpenForm={handleOpenForm} />
+        <Header handleOpenForm={handleOpenForm} />
         <List
           list={list}
           pages={pages}
@@ -107,7 +107,7 @@ export default compose(
   withStyles(styles, { name: "Panel" }),
   connect(
     ({ commonCodeList, commonCodeForm, commonCodeGroupList }) => ({
-      list: commonCodeList.get("list").toJS(),
+      list: commonCodeList.get("list"),
       useCodes: commonCodeList.get("useCodes").toJS(),
       pages: commonCodeList.get("pages"),
       loading: commonCodeList.get("loading"),

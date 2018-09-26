@@ -18,14 +18,20 @@ const styles = theme => ({
 });
 
 class Header extends Component {
+  shouldComponentUpdate(nextProps, nextState) {
+    return false;
+  }
+  //===========================================================================
+
   render() {
-    const { classes, onOpenForm } = this.props;
+    const { classes, handleOpenForm } = this.props;
     const { controlBox, add } = classes;
+
     return (
       <Fragment>
         <section>
           <div className={controlBox}>
-            <IconButton onClick={onOpenForm}>
+            <IconButton onClick={handleOpenForm}>
               <AddBoxOutlinedIcon className={add} />
             </IconButton>
           </div>

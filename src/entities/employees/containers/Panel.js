@@ -77,7 +77,7 @@ class Panel extends Component {
     const { handleOpenForm, handleOpenEditForm, handleDeleteConfirm } = this;
     return (
       <section className={contentWrap}>
-        <Header onOpenForm={handleOpenForm} />
+        <Header handleOpenForm={handleOpenForm} />
         <List
           list={list}
           pages={pages}
@@ -104,7 +104,7 @@ export default compose(
   withStyles(styles, { name: "Panel" }),
   connect(
     ({ employeeList, employeeForm }) => ({
-      list: employeeList.get("list").toJS(),
+      list: employeeList.get("list"),
       genderCodes: employeeList.get("genderCodes").toJS(),
       pages: employeeList.get("pages"),
       loading: employeeList.get("loading"),

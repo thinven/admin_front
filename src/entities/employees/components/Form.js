@@ -79,6 +79,7 @@ class Form extends Component {
     const { handleChangeInput, handleSubmit, handleClose } = this;
     const { classes, form, genderCodes } = this.props;
     const { buttonWrap, button } = classes;
+
     return (
       <Dialog
         onClose={handleClose}

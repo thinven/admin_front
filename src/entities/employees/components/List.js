@@ -30,6 +30,12 @@ const styles = theme => ({
 });
 
 class List extends Component {
+  shouldComponentUpdate(nextProps, nextState) {
+    if (this.props.list !== nextProps.list) return true;
+    return false;
+  }
+  //===========================================================================
+
   handlePetchData = (state, instance) => {
     const { ListActions } = this.props;
     ListActions.startLoading();
@@ -114,6 +120,7 @@ class List extends Component {
     );
   };
   //===========================================================================
+
   render() {
     const { handlePetchData, info } = this;
     const { classes, list, pages, listLoading } = this.props;
@@ -123,7 +130,7 @@ class List extends Component {
       <div className={listWrap}>
         <Table
           columns={columns}
-          data={list}
+          data={list.toJS()}
           pages={pages}
           loading={listLoading}
           onFetchData={handlePetchData}
