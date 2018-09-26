@@ -71,7 +71,7 @@ class Form extends Component {
         } else {
           ListActions.addCommonCode(this.props.info);
         }
-        this.handleCloseForm();
+        this.handleClose();
       } else {
         onSendMsg(this.props.result);
       }
@@ -129,6 +129,7 @@ class Form extends Component {
                   loadOptions={handleLoadOptions}
                   onChanges={handleAutoCompleteChange}
                   maxMenuHeight={150}
+                  autoFocus={true}
                 />
               </Grid>
               <Grid item container xs={12}>
@@ -136,12 +137,11 @@ class Form extends Component {
                   <Input
                     required
                     isNumber
-                    maxLength={20}
+                    maxNumber={999999999}
                     name="code"
                     label="코드"
                     value={form.code}
                     onChangeInput={handleChangeInput}
-                    autoFocus={true}
                   />
                 </Grid>
                 <Grid item container xs={6}>

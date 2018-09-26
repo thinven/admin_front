@@ -68,13 +68,15 @@ class Panel extends Component {
       FormActions,
       ListActions,
       GroupListActions,
-      classes,
       form,
+      result,
+      info,
       groupList,
       list,
       pages,
       loading,
-      useCodes
+      useCodes,
+      classes
     } = this.props;
     const { contentWrap } = classes;
     const { handleOpenForm, handleOpenEditForm, handleDeleteConfirm } = this;
@@ -93,9 +95,12 @@ class Panel extends Component {
         <Form
           innerRef={node => (this._form = node)}
           form={form}
+          result={result}
+          info={info}
           useCodes={useCodes}
           groupList={groupList}
           FormActions={FormActions}
+          ListActions={ListActions}
           GroupListActions={GroupListActions}
         />
       </section>

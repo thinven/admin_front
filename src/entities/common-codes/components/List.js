@@ -30,8 +30,12 @@ const styles = theme => ({
 });
 
 class List extends Component {
+  state = {
+    expanded: {}
+  };
   shouldComponentUpdate(nextProps, nextState) {
     if (this.props.list !== nextProps.list) return true;
+    if (this.state.expanded !== nextState.expanded) return true;
     return false;
   }
   //===========================================================================
@@ -58,6 +62,11 @@ class List extends Component {
     }
     return result;
   };
+  handleExpandedChange = (newExpanded, index, event) => {
+    this.setState({
+      expanded: { [index]: newExpanded[index] }
+    });
+  };
   info = ({ original }) => {
     const { commonCodeGroup, code, name, ordered, use } = original;
     const { classes, onEditForm, onDeleteConfirm, useCodes } = this.props;
@@ -68,33 +77,27 @@ class List extends Component {
           <Grid item container xs={4} />
           <Grid item container xs={4} alignItems="flex-start">
             <Grid item xs={12}>
-              <ReadOnly
-                label="공통코드그룹명"
-                defaultValue={commonCodeGroup.name}
-              />
+              <ReadOnly label="공통코드그룹명" value={commonCodeGroup.name} />
             </Grid>
             <Grid item xs={12}>
-              <ReadOnly label="코드" defaultValue={code} />
+              <ReadOnly label="코드" value={code} />
             </Grid>
             <Grid item xs={12}>
-              <ReadOnly label="표시순서" defaultValue={ordered} />
+              <ReadOnly label="표시순서" value={ordered} />
             </Grid>
           </Grid>
           <Grid item container xs={4}>
             <Grid item xs={12}>
               <ReadOnly
                 label="그룹사용여부"
-                defaultValue={Codes.label(useCodes, commonCodeGroup.use)}
+                value={Codes.label(useCodes, commonCodeGroup.use)}
               />
             </Grid>
             <Grid item xs={12}>
-              <ReadOnly label="코드명" defaultValue={name} />
+              <ReadOnly label="코드명" value={name} />
             </Grid>
             <Grid item xs={12}>
-              <ReadOnly
-                label="사용여부"
-                defaultValue={Codes.label(useCodes, use)}
-              />
+              <ReadOnly label="사용여부" value={Codes.label(useCodes, use)} />
             </Grid>
           </Grid>
         </Grid>
@@ -106,14 +109,14 @@ class List extends Component {
               color="primary"
               className={btnActions}
             >
-              그룹수정
+              코드수정
             </Button>
             <Button
               onClick={() => onDeleteConfirm(original)}
               variant="outlined"
               className={btnActions}
             >
-              코드수정
+              그룹수정
             </Button>
           </Grid>
         </Grid>
@@ -123,19 +126,22 @@ class List extends Component {
   //===========================================================================
 
   render() {
-    const { handlePetchData } = this;
+    const { handlePetchData, handleExpandedChange, info } = this;
     const { classes, list, pages, listLoading, useCodes } = this.props;
     const { listWrap } = classes;
 
     return (
       <div className={listWrap}>
         <Table
+          ref={ref => (this._table = ref)}
           columns={columns(useCodes)}
           data={list.toJS()}
           pages={pages}
           loading={listLoading}
           onFetchData={handlePetchData}
-          SubComponent={this.info}
+          SubComponent={info}
+          expanded={this.state.expanded}
+          onExpandedChange={handleExpandedChange}
         />
       </div>
     );

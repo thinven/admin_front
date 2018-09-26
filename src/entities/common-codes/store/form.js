@@ -64,7 +64,10 @@ export default handleActions(
     },
     [LOAD_COMMONCODE]: (state, action) => {
       const { info } = action.payload;
-      return state.set("form", Map(info));
+      return state
+        .set("form", Map(info))
+        .setIn(["form", "bcgu"], info.commonCodeGroup.uid)
+        .setIn(["form", "bcgn"], info.commonCodeGroup.name);
     },
     ...pender({
       type: ADD_COMMONCODE,

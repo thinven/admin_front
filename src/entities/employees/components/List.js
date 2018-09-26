@@ -30,8 +30,12 @@ const styles = theme => ({
 });
 
 class List extends Component {
+  state = {
+    expanded: {}
+  };
   shouldComponentUpdate(nextProps, nextState) {
     if (this.props.list !== nextProps.list) return true;
+    if (this.state.expanded !== nextState.expanded) return true;
     return false;
   }
   //===========================================================================
@@ -58,6 +62,11 @@ class List extends Component {
     }
     return result;
   };
+  handleExpandedChange = (newExpanded, index, event) => {
+    this.setState({
+      expanded: { [index]: newExpanded[index] }
+    });
+  };
   info = ({ original }) => {
     const { firstname, lastname, birthday, gender, phone, email } = original;
     const {
@@ -73,27 +82,24 @@ class List extends Component {
           <Grid item container xs={4} />
           <Grid item container xs={4} alignItems="flex-start">
             <Grid item xs={12}>
-              <ReadOnly label="이름" defaultValue={firstname} />
+              <ReadOnly label="이름" value={firstname} />
             </Grid>
             <Grid item xs={12}>
-              <ReadOnly label="생일" defaultValue={birthday} />
+              <ReadOnly label="생일" value={birthday} />
             </Grid>
             <Grid item xs={12}>
-              <ReadOnly label="핸드폰" defaultValue={phone} />
+              <ReadOnly label="핸드폰" value={phone} />
             </Grid>
           </Grid>
           <Grid item container xs={4}>
             <Grid item xs={12}>
-              <ReadOnly label="성" defaultValue={lastname} />
+              <ReadOnly label="성" value={lastname} />
             </Grid>
             <Grid item xs={12}>
-              <ReadOnly
-                label="성별"
-                defaultValue={Codes.label(genderCodes, gender)}
-              />
+              <ReadOnly label="성별" value={Codes.label(genderCodes, gender)} />
             </Grid>
             <Grid item xs={12}>
-              <ReadOnly label="이메일" defaultValue={email} />
+              <ReadOnly label="이메일" value={email} />
             </Grid>
           </Grid>
         </Grid>
@@ -122,7 +128,7 @@ class List extends Component {
   //===========================================================================
 
   render() {
-    const { handlePetchData, info } = this;
+    const { handlePetchData, handleExpandedChange, info } = this;
     const { classes, list, pages, listLoading } = this.props;
     const { listWrap } = classes;
 
@@ -135,6 +141,8 @@ class List extends Component {
           loading={listLoading}
           onFetchData={handlePetchData}
           SubComponent={info}
+          expanded={this.state.expanded}
+          onExpandedChange={handleExpandedChange}
         />
       </div>
     );

@@ -68,6 +68,7 @@ class Panel extends Component {
       handleSendMsg,
       classes,
       form,
+      result,
       list,
       pages,
       loading,
@@ -90,6 +91,7 @@ class Panel extends Component {
         <Form
           innerRef={node => (this._form = node)}
           form={form}
+          result={result}
           genderCodes={genderCodes}
           FormActions={FormActions}
           ListActions={ListActions}

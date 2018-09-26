@@ -73,6 +73,10 @@ class Input extends Component {
       isDate,
       isHp,
       isNumber,
+      maxNumber,
+      minNumber,
+      maxLength,
+      minLength,
       classes,
       type,
       ...other
