@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 
+import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -8,20 +9,11 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import MenuItem from "@material-ui/core/MenuItem";
 import Grid from "@material-ui/core/Grid";
 
-import { withStyles } from "@material-ui/core/styles";
-
 import { ValidationForm } from "support/validator";
 import { Input } from "support/wrapper";
 import { HpMaskedInput } from "support/wrapper/maskedinput";
 
 const styles = theme => ({
-  container: {
-    padding: theme.spacing.unit
-  },
-  textFieldFull: {
-    marginBottom: theme.spacing.unit,
-    width: 600 - theme.spacing.unit * 8
-  },
   buttonWrap: {
     marginTop: theme.spacing.unit
   },
@@ -32,25 +24,66 @@ const styles = theme => ({
 
 class Form extends Component {
   state = {
-    gender: "10"
+    open: false
+  };
+  //===========================================================================
+  handleOpen = () => {
+    const { FormActions } = this.props;
+    FormActions.initialize();
+    this.setState({
+      open: true
+    });
+  };
+  handleChangeInput = e => {
+    const { FormActions } = this.props;
+    const { name, value } = e.target;
+    FormActions.changeInput({ name, value });
+  };
+  handleSubmit = async () => {
+    const { form, FormActions, ListActions, handleSendMsg } = this.props;
+    try {
+      if (form.uid) {
+        await FormActions.patchEmployee(form);
+      } else {
+        await FormActions.addEmployee(form);
+      }
+      if (this.props.result.key === "SUCCESS") {
+        if (form.uid) {
+          ListActions.patchEmployee(form);
+        } else {
+          ListActions.addEmployee(form);
+        }
+        this.handleClose();
+      } else {
+        handleSendMsg(this.props.result);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  handleClose = () => {
+    this.setState({ open: false });
+  };
+  //===========================================================================
+  handleOpenEdit = original => {
+    const { FormActions } = this.props;
+    FormActions.loadEmployee({
+      info: original
+    });
+    this.setState({
+      open: true
+    });
   };
   //===========================================================================
   render() {
-    const {
-      classes,
-      form,
-      genderCodes,
-      formOpen,
-      onCloseForm,
-      onSubmit,
-      onChangeInput
-    } = this.props;
+    const { handleChangeInput, handleSubmit, handleClose } = this;
+    const { classes, form, genderCodes } = this.props;
     const { buttonWrap, button } = classes;
     return (
       <Dialog
-        onClose={onCloseForm}
+        onClose={handleClose}
         aria-labelledby="simple-dialog-title"
-        open={formOpen}
+        open={this.state.open}
       >
         <DialogTitle id="simple-dialog-title">사원 등록</DialogTitle>
         <DialogContent>
@@ -58,7 +91,7 @@ class Form extends Component {
             사원 등록후 바로 사이트에 접속 가능합니다.
             <br />첫 비밀번호는 아이디와 동일하게 세팅 됩니다.
           </DialogContentText>
-          <ValidationForm onSubmit={onSubmit}>
+          <ValidationForm onSubmit={handleSubmit}>
             <Input type="hidden" name="uid" value={form.uid} />
             <Grid container>
               <Grid item container xs={12}>
@@ -70,7 +103,7 @@ class Form extends Component {
                     name="id"
                     label="로그인ID"
                     value={form.id}
-                    onChangeInput={onChangeInput}
+                    onChangeInput={handleChangeInput}
                     autoFocus={true}
                   />
                 </Grid>
@@ -86,7 +119,7 @@ class Form extends Component {
                     name="firstname"
                     label="이름"
                     value={form.firstname}
-                    onChangeInput={onChangeInput}
+                    onChangeInput={handleChangeInput}
                   />
                 </Grid>
                 <Grid item container xs={6}>
@@ -96,7 +129,7 @@ class Form extends Component {
                     name="lastname"
                     label="성"
                     value={form.lastname}
-                    onChangeInput={onChangeInput}
+                    onChangeInput={handleChangeInput}
                   />
                 </Grid>
               </Grid>
@@ -109,7 +142,7 @@ class Form extends Component {
                     label="생일"
                     type="date"
                     value={form.birthday}
-                    onChangeInput={onChangeInput}
+                    onChangeInput={handleChangeInput}
                     InputLabelProps={{
                       shrink: true
                     }}
@@ -121,7 +154,7 @@ class Form extends Component {
                     name="gender"
                     label="성별"
                     value={form.gender}
-                    onChangeInput={onChangeInput}
+                    onChangeInput={handleChangeInput}
                     select
                   >
                     {genderCodes.map(option => (
@@ -140,7 +173,7 @@ class Form extends Component {
                     name="phone"
                     label="연락처(HP)"
                     value={form.phone}
-                    onChangeInput={onChangeInput}
+                    onChangeInput={handleChangeInput}
                     InputProps={{
                       inputComponent: HpMaskedInput
                     }}
@@ -157,7 +190,7 @@ class Form extends Component {
                     label="이메일"
                     type="email"
                     value={form.email}
-                    onChangeInput={onChangeInput}
+                    onChangeInput={handleChangeInput}
                   />
                 </Grid>
               </Grid>
@@ -165,7 +198,7 @@ class Form extends Component {
             <Grid container className={buttonWrap}>
               <Grid item container xs={12} justify="center">
                 <Button
-                  onClick={onCloseForm}
+                  onClick={handleClose}
                   variant="outlined"
                   className={button}
                 >

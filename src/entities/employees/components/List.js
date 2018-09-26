@@ -7,6 +7,7 @@ import Button from "@material-ui/core/Button";
 import { withStyles } from "@material-ui/core/styles";
 
 import { Table, ReadOnly } from "support/wrapper";
+import { Codes } from "support/utils";
 import { columns } from "./List.Header";
 
 const styles = theme => ({
@@ -29,9 +30,36 @@ const styles = theme => ({
 });
 
 class List extends Component {
-  info = ({ original, row }) => {
-    const { firstname, lastname, birthday, gender, phone, email } = row;
-    const { classes, onEditForm, onDeleteConfirm, genderCodes } = this.props;
+  handlePetchData = (state, instance) => {
+    const { ListActions } = this.props;
+    ListActions.startLoading();
+    ListActions.getEmployees(
+      Object.assign(
+        {
+          page: state.page + 1, //react-table page가 0부터 시작함
+          pageSize: state.pageSize,
+          sorted: state.sorted
+        },
+        this.resetFiltered(state.filtered)
+      )
+    );
+  };
+  resetFiltered = filtered => {
+    let max = filtered.length;
+    let result = {};
+    for (let idx = 0; idx < max; idx++) {
+      result[filtered[idx].id] = filtered[idx].value;
+    }
+    return result;
+  };
+  info = ({ original }) => {
+    const { firstname, lastname, birthday, gender, phone, email } = original;
+    const {
+      classes,
+      handleOpenEditForm,
+      handleDeleteConfirm,
+      genderCodes
+    } = this.props;
     const { root, infoActions, btnActions } = classes;
     return (
       <Paper className={root}>
@@ -55,9 +83,7 @@ class List extends Component {
             <Grid item xs={12}>
               <ReadOnly
                 label="성별"
-                defaultValue={
-                  genderCodes.filter(code => code.value * 1 === gender)[0].label
-                }
+                defaultValue={Codes.label(genderCodes, gender)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -68,7 +94,7 @@ class List extends Component {
         <Grid container className={infoActions}>
           <Grid item container xs={12} justify="center">
             <Button
-              onClick={() => onEditForm(original)}
+              onClick={() => handleOpenEditForm(original)}
               variant="outlined"
               color="primary"
               className={btnActions}
@@ -76,7 +102,7 @@ class List extends Component {
               수정
             </Button>
             <Button
-              onClick={() => onDeleteConfirm(original)}
+              onClick={() => handleDeleteConfirm(original)}
               variant="outlined"
               className={btnActions}
             >
@@ -89,7 +115,8 @@ class List extends Component {
   };
   //===========================================================================
   render() {
-    const { classes, list, pages, listLoading, onFetchData } = this.props;
+    const { handlePetchData, info } = this;
+    const { classes, list, pages, listLoading } = this.props;
     const { listWrap } = classes;
 
     return (
@@ -99,8 +126,8 @@ class List extends Component {
           data={list}
           pages={pages}
           loading={listLoading}
-          onFetchData={onFetchData}
-          SubComponent={this.info}
+          onFetchData={handlePetchData}
+          SubComponent={info}
         />
       </div>
     );

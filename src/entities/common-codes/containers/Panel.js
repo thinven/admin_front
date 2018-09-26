@@ -22,96 +22,13 @@ const styles = theme => ({
 });
 
 class Panel extends Component {
-  state = {
-    formOpen: false
-  };
-  //===========================================================================
-
-  /**
-   * 목록 관련 이벤트.
-   */
-  handlePetchData = (state, instance) => {
-    const { ListActions } = this.props;
-    ListActions.startLoading();
-    ListActions.getCommonCodes(
-      Object.assign(
-        {
-          page: state.page + 1, //react-table page가 0부터 시작함
-          pageSize: state.pageSize,
-          sorted: state.sorted
-        },
-        this.resetFiltered(state.filtered)
-      )
-    );
-  };
-  resetFiltered = filtered => {
-    let max = filtered.length;
-    let result = {};
-    for (let idx = 0; idx < max; idx++) {
-      result[filtered[idx].id] = filtered[idx].value;
-    }
-    return result;
-  };
   //===========================================================================
 
   /**
    * 신규등록폼 관련 이벤트.
    */
   handleOpenForm = () => {
-    const { FormActions } = this.props;
-    FormActions.initialize();
-    this.setState({
-      formOpen: true
-    });
-  };
-  handleLoadOptions = async (inputValue, callback) => {
-    const { GroupListActions } = this.props;
-    try {
-      await GroupListActions.getCommonCodeGroups({ name: inputValue });
-      callback(
-        this.props.groupList.map(group => ({
-          value: group.uid,
-          label: group.name
-        }))
-      );
-    } catch (e) {
-      console.log("handleLoadOptions catch", e);
-    }
-  };
-  handleAutoCompleteChange = (name, val) => {
-    const { FormActions } = this.props;
-    FormActions.changeInput({ name: name + "n", value: val.label });
-    FormActions.changeInput({ name: name + "u", value: val.value });
-  };
-  handleChangeInput = e => {
-    const { FormActions } = this.props;
-    const { name, value } = e.target;
-    FormActions.changeInput({ name, value });
-  };
-  handleSubmit = async () => {
-    const { form, FormActions, ListActions, onSendMsg } = this.props;
-    try {
-      if (form.uid) {
-        await FormActions.patchCommonCode(form);
-      } else {
-        await FormActions.addCommonCode(form);
-      }
-      if (this.props.result.key === "SUCCESS") {
-        if (form.uid) {
-          ListActions.patchCommonCode(this.props.info);
-        } else {
-          ListActions.addCommonCode(this.props.info);
-        }
-        this.handleCloseForm();
-      } else {
-        onSendMsg(this.props.result);
-      }
-    } catch (e) {
-      console.log("handleSubmit catch", e);
-    }
-  };
-  handleCloseForm = () => {
-    this.setState({ formOpen: false });
+    this._form.handleOpen();
   };
   //===========================================================================
 
@@ -119,13 +36,7 @@ class Panel extends Component {
    * 수정폼 관련 이벤트.
    */
   handleOpenEditForm = original => {
-    const { FormActions } = this.props;
-    FormActions.loadCommonCode({
-      info: original
-    });
-    this.setState({
-      formOpen: true
-    });
+    this._form.handleOpenEdit(original);
   };
   //===========================================================================
 
@@ -133,11 +44,11 @@ class Panel extends Component {
    * 삭제 관련 이벤트.
    */
   handleDeleteConfirm = original => {
-    const { FormActions, ListActions, onConfirm } = this.props;
+    const { FormActions, ListActions, handleConfirm } = this.props;
     FormActions.loadCommonCode({
       info: original
     });
-    onConfirm({
+    handleConfirm({
       title: "삭제 알림",
       desc: original.id + "님을 삭제 하시겠습니까?",
       onOk: async () => {
@@ -153,20 +64,20 @@ class Panel extends Component {
   //===========================================================================
 
   render() {
-    const { formOpen } = this.state;
-    const { classes, form, list, pages, loading, useCodes } = this.props;
-    const { contentWrap } = classes;
     const {
-      handlePetchData,
-      handleOpenForm,
-      handleChangeInput,
-      handleSubmit,
-      handleCloseForm,
-      handleOpenEditForm,
-      handleDeleteConfirm,
-      handleLoadOptions,
-      handleAutoCompleteChange
-    } = this;
+      FormActions,
+      ListActions,
+      GroupListActions,
+      classes,
+      form,
+      groupList,
+      list,
+      pages,
+      loading,
+      useCodes
+    } = this.props;
+    const { contentWrap } = classes;
+    const { handleOpenForm, handleOpenEditForm, handleDeleteConfirm } = this;
     return (
       <section className={contentWrap}>
         <Header onOpenForm={handleOpenForm} />
@@ -175,19 +86,17 @@ class Panel extends Component {
           pages={pages}
           useCodes={useCodes}
           listLoading={loading}
-          onFetchData={handlePetchData}
+          ListActions={ListActions}
           onEditForm={handleOpenEditForm}
           onDeleteConfirm={handleDeleteConfirm}
         />
         <Form
+          innerRef={node => (this._form = node)}
           form={form}
           useCodes={useCodes}
-          formOpen={formOpen}
-          onCloseForm={handleCloseForm}
-          onSubmit={handleSubmit}
-          onChangeInput={handleChangeInput}
-          onLoadOptions={handleLoadOptions}
-          onAutoCompleteChange={handleAutoCompleteChange}
+          groupList={groupList}
+          FormActions={FormActions}
+          GroupListActions={GroupListActions}
         />
       </section>
     );

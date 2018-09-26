@@ -1,6 +1,9 @@
 import React from "react";
+
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
+
+import { Codes } from "support/utils";
 
 export const columns = useCodes => [
   {
@@ -21,13 +24,13 @@ export const columns = useCodes => [
     accessor: "name"
   },
   {
-    Header: "순서",
+    Header: "표시순서",
     accessor: "ordered"
   },
   {
     Header: "사용여부",
     id: "use",
-    accessor: d => useCodes.filter(code => code.value * 1 === d.use)[0].label
+    accessor: d => Codes.label(useCodes, d.use)
   },
   {
     expander: true,

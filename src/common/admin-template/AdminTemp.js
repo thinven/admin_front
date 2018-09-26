@@ -65,8 +65,8 @@ class AdminTemplate extends Component {
     const { root, content, toolbar } = classes;
     const childrenWithProps = React.Children.map(children, child =>
       React.cloneElement(child, {
-        onSendMsg: this.handleSendMsg,
-        onConfirm: this.handleConfirm
+        handleSendMsg: this.handleSendMsg,
+        handleConfirm: this.handleConfirm
       })
     );
     return (

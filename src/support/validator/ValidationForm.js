@@ -5,7 +5,7 @@ import { ValidatorProvider } from "./Provider";
 class ValidationForm extends Component {
   handleSubmit = event => {
     event.preventDefault();
-    if (this.validator.validate()) {
+    if (this._validator.validate()) {
       const { onSubmit } = this.props;
       onSubmit();
     }
@@ -15,7 +15,7 @@ class ValidationForm extends Component {
     const { handleSubmit } = this;
     const { children } = this.props;
     return (
-      <ValidatorProvider ref={ref => (this.validator = ref)}>
+      <ValidatorProvider ref={ref => (this._validator = ref)}>
         <form autoComplete="off" onSubmit={handleSubmit}>
           {children}
         </form>

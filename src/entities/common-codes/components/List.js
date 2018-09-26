@@ -7,6 +7,7 @@ import Button from "@material-ui/core/Button";
 import { withStyles } from "@material-ui/core/styles";
 
 import { Table, ReadOnly } from "support/wrapper";
+import { Codes } from "support/utils";
 import { columns } from "./List.Header";
 
 const styles = theme => ({
@@ -29,9 +30,33 @@ const styles = theme => ({
 });
 
 class List extends Component {
-  info = ({ original, row }) => {
-    const { firstname, lastname, birthday, gender, phone, email } = row;
-    const { classes, onEditForm, onDeleteConfirm } = this.props;
+  //===========================================================================
+
+  handlePetchData = (state, instance) => {
+    const { ListActions } = this.props;
+    ListActions.startLoading();
+    ListActions.getCommonCodes(
+      Object.assign(
+        {
+          page: state.page + 1, //react-table page가 0부터 시작함
+          pageSize: state.pageSize,
+          sorted: state.sorted
+        },
+        this.resetFiltered(state.filtered)
+      )
+    );
+  };
+  resetFiltered = filtered => {
+    let max = filtered.length;
+    let result = {};
+    for (let idx = 0; idx < max; idx++) {
+      result[filtered[idx].id] = filtered[idx].value;
+    }
+    return result;
+  };
+  info = ({ original }) => {
+    const { commonCodeGroup, code, name, ordered, use } = original;
+    const { classes, onEditForm, onDeleteConfirm, useCodes } = this.props;
     const { root, infoActions, btnActions } = classes;
     return (
       <Paper className={root}>
@@ -39,24 +64,33 @@ class List extends Component {
           <Grid item container xs={4} />
           <Grid item container xs={4} alignItems="flex-start">
             <Grid item xs={12}>
-              <ReadOnly label="이름" defaultValue={firstname} />
+              <ReadOnly
+                label="공통코드그룹명"
+                defaultValue={commonCodeGroup.name}
+              />
             </Grid>
             <Grid item xs={12}>
-              <ReadOnly label="생일" defaultValue={birthday} />
+              <ReadOnly label="코드" defaultValue={code} />
             </Grid>
             <Grid item xs={12}>
-              <ReadOnly label="핸드폰" defaultValue={phone} />
+              <ReadOnly label="표시순서" defaultValue={ordered} />
             </Grid>
           </Grid>
           <Grid item container xs={4}>
             <Grid item xs={12}>
-              <ReadOnly label="성" defaultValue={lastname} />
+              <ReadOnly
+                label="그룹사용여부"
+                defaultValue={Codes.label(useCodes, commonCodeGroup.use)}
+              />
             </Grid>
             <Grid item xs={12}>
-              <ReadOnly label="성별" defaultValue={gender} />
+              <ReadOnly label="코드명" defaultValue={name} />
             </Grid>
             <Grid item xs={12}>
-              <ReadOnly label="이메일" defaultValue={email} />
+              <ReadOnly
+                label="사용여부"
+                defaultValue={Codes.label(useCodes, use)}
+              />
             </Grid>
           </Grid>
         </Grid>
@@ -68,14 +102,14 @@ class List extends Component {
               color="primary"
               className={btnActions}
             >
-              수정
+              그룹수정
             </Button>
             <Button
               onClick={() => onDeleteConfirm(original)}
               variant="outlined"
               className={btnActions}
             >
-              삭제
+              코드수정
             </Button>
           </Grid>
         </Grid>
@@ -84,14 +118,8 @@ class List extends Component {
   };
   //===========================================================================
   render() {
-    const {
-      classes,
-      list,
-      pages,
-      listLoading,
-      onFetchData,
-      useCodes
-    } = this.props;
+    const { handlePetchData } = this;
+    const { classes, list, pages, listLoading, useCodes } = this.props;
     const { listWrap } = classes;
 
     return (
@@ -101,7 +129,7 @@ class List extends Component {
           data={list}
           pages={pages}
           loading={listLoading}
-          onFetchData={onFetchData}
+          onFetchData={handlePetchData}
           SubComponent={this.info}
         />
       </div>

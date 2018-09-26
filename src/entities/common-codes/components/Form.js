@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 
+import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -8,19 +9,10 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import MenuItem from "@material-ui/core/MenuItem";
 import Grid from "@material-ui/core/Grid";
 
-import { withStyles } from "@material-ui/core/styles";
-
 import { ValidationForm } from "support/validator";
 import { Input, AutoComplete } from "support/wrapper";
 
 const styles = theme => ({
-  container: {
-    padding: theme.spacing.unit
-  },
-  textFieldFull: {
-    marginBottom: theme.spacing.unit,
-    width: 600 - theme.spacing.unit * 8
-  },
   buttonWrap: {
     marginTop: theme.spacing.unit
   },
@@ -30,26 +22,93 @@ const styles = theme => ({
 });
 
 class Form extends Component {
+  state = {
+    open: false
+  };
+  //===========================================================================
+  handleOpen = () => {
+    const { FormActions } = this.props;
+    FormActions.initialize();
+    this.setState({
+      open: true
+    });
+  };
+  handleLoadOptions = async (inputValue, callback) => {
+    const { GroupListActions } = this.props;
+    try {
+      await GroupListActions.getCommonCodeGroups({ name: inputValue });
+      callback(
+        this.props.groupList.map(group => ({
+          value: group.uid,
+          label: group.name
+        }))
+      );
+    } catch (e) {
+      console.log("handleLoadOptions catch", e);
+    }
+  };
+  handleAutoCompleteChange = (name, val) => {
+    const { FormActions } = this.props;
+    FormActions.changeInput({ name: name + "n", value: val.label });
+    FormActions.changeInput({ name: name + "u", value: val.value });
+  };
+  handleChangeInput = e => {
+    const { FormActions } = this.props;
+    const { name, value } = e.target;
+    FormActions.changeInput({ name, value });
+  };
+  handleSubmit = async () => {
+    const { form, FormActions, ListActions, onSendMsg } = this.props;
+    try {
+      if (form.uid) {
+        await FormActions.patchCommonCode(form);
+      } else {
+        await FormActions.addCommonCode(form);
+      }
+      if (this.props.result.key === "SUCCESS") {
+        if (form.uid) {
+          ListActions.patchCommonCode(this.props.info);
+        } else {
+          ListActions.addCommonCode(this.props.info);
+        }
+        this.handleCloseForm();
+      } else {
+        onSendMsg(this.props.result);
+      }
+    } catch (e) {
+      console.log("handleSubmit catch", e);
+    }
+  };
+  handleClose = () => {
+    this.setState({ open: false });
+  };
+  //===========================================================================
+  handleOpenEdit = original => {
+    const { FormActions } = this.props;
+    FormActions.loadCommonCode({
+      info: original
+    });
+    this.setState({
+      open: true
+    });
+  };
   //===========================================================================
   render() {
     const {
-      classes,
-      form,
-      useCodes,
-      formOpen,
-      onCloseForm,
-      onSubmit,
-      onChangeInput,
-      onLoadOptions,
-      onAutoCompleteChange
-    } = this.props;
+      handleLoadOptions,
+      handleAutoCompleteChange,
+      handleChangeInput,
+      handleSubmit,
+      handleClose
+    } = this;
+    const { classes, form, useCodes } = this.props;
     const { buttonWrap, button } = classes;
 
     return (
       <Dialog
-        onClose={onCloseForm}
+        onClose={handleClose}
         aria-labelledby="simple-dialog-title"
-        open={formOpen}
+        open={this.state.open}
       >
         <DialogTitle id="simple-dialog-title">공통코드 등록</DialogTitle>
         <DialogContent>
@@ -58,7 +117,7 @@ class Form extends Component {
             <br />
             코드는 숫자로만 기입해 주세요.
           </DialogContentText>
-          <ValidationForm onSubmit={onSubmit}>
+          <ValidationForm onSubmit={handleSubmit}>
             <Input type="hidden" name="uid" value={form.uid} />
             <Grid container>
               <Grid item container xs={12}>
@@ -67,8 +126,8 @@ class Form extends Component {
                   placeholder={"입력문자열로 자동검색합니다."}
                   name={"bcg"}
                   value={{ label: form.bcgn, value: form.bcgu }}
-                  loadOptions={onLoadOptions}
-                  onChanges={onAutoCompleteChange}
+                  loadOptions={handleLoadOptions}
+                  onChanges={handleAutoCompleteChange}
                   maxMenuHeight={150}
                 />
               </Grid>
@@ -81,7 +140,7 @@ class Form extends Component {
                     name="code"
                     label="코드"
                     value={form.code}
-                    onChangeInput={onChangeInput}
+                    onChangeInput={handleChangeInput}
                     autoFocus={true}
                   />
                 </Grid>
@@ -92,7 +151,7 @@ class Form extends Component {
                     name="name"
                     label="코드명"
                     value={form.name}
-                    onChangeInput={onChangeInput}
+                    onChangeInput={handleChangeInput}
                   />
                 </Grid>
               </Grid>
@@ -104,7 +163,7 @@ class Form extends Component {
                     name="ordered"
                     label="순서"
                     value={form.ordered}
-                    onChangeInput={onChangeInput}
+                    onChangeInput={handleChangeInput}
                   />
                 </Grid>
                 <Grid item container xs={6}>
@@ -113,7 +172,7 @@ class Form extends Component {
                     name="use"
                     label="사용여부"
                     value={form.use}
-                    onChangeInput={onChangeInput}
+                    onChangeInput={handleChangeInput}
                     select
                   >
                     {useCodes.map(option => (
@@ -128,7 +187,7 @@ class Form extends Component {
             <Grid container className={buttonWrap}>
               <Grid item container xs={12} justify="center">
                 <Button
-                  onClick={onCloseForm}
+                  onClick={handleClose}
                   variant="outlined"
                   className={button}
                 >
