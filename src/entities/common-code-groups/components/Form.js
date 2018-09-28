@@ -10,7 +10,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Grid from "@material-ui/core/Grid";
 
 import { ValidationForm } from "support/validator";
-import { Input, AutoComplete } from "support/wrapper";
+import { Input } from "support/wrapper";
 
 const styles = theme => ({
   buttonWrap: {
@@ -33,50 +33,28 @@ class Form extends Component {
       open: true
     });
   };
-  handleLoadOptions = async (inputValue, callback) => {
-    const { GroupListActions } = this.props;
-    try {
-      await GroupListActions.getCommonCodeGroups({ name: inputValue });
-      callback(
-        this.props.groupList.map(group => ({
-          value: group.uid,
-          label: group.name
-        }))
-      );
-    } catch (e) {
-      console.log("handleLoadOptions catch", e);
-    }
-  };
-  handleAutoCompleteChange = (name, val) => {
-    const { FormActions } = this.props;
-    FormActions.changeInput({ name: name + "n", value: val.label });
-    FormActions.changeInput({ name: name + "u", value: val.value });
-  };
   handleChangeInput = e => {
     const { FormActions } = this.props;
     const { name, value } = e.target;
     FormActions.changeInput({ name, value });
   };
   handleSubmit = async () => {
-    const { form, FormActions, ListActions, handleSendMsg } = this.props;
+    const {
+      form,
+      FormActions,
+      CommonCodeListActions,
+      handleSendMsg
+    } = this.props;
     try {
-      if (form.uid) {
-        await FormActions.patchCommonCode(form);
-      } else {
-        await FormActions.addCommonCode(form);
-      }
+      await FormActions.patchCommonCodeGroup(form);
       if (this.props.result.key === "SUCCESS") {
-        if (form.uid) {
-          ListActions.patchCommonCode(this.props.info);
-        } else {
-          ListActions.addCommonCode(this.props.info);
-        }
+        CommonCodeListActions.patchCommonCodeGroup(form);
         this.handleClose();
       } else {
         handleSendMsg(this.props.result);
       }
     } catch (e) {
-      console.log("handleSubmit catch", e);
+      console.log(e);
     }
   };
   handleClose = () => {
@@ -85,8 +63,8 @@ class Form extends Component {
   //===========================================================================
   handleOpenEdit = original => {
     const { FormActions } = this.props;
-    FormActions.loadCommonCode({
-      info: original
+    FormActions.loadCommonCodeGroup({
+      info: original.commonCodeGroup
     });
     this.setState({
       open: true
@@ -94,13 +72,7 @@ class Form extends Component {
   };
   //===========================================================================
   render() {
-    const {
-      handleLoadOptions,
-      handleAutoCompleteChange,
-      handleChangeInput,
-      handleSubmit,
-      handleClose
-    } = this;
+    const { handleChangeInput, handleSubmit, handleClose } = this;
     const { classes, form, useCodes } = this.props;
     const { buttonWrap, button } = classes;
 
@@ -110,59 +82,22 @@ class Form extends Component {
         aria-labelledby="simple-dialog-title"
         open={this.state.open}
       >
-        <DialogTitle id="simple-dialog-title">공통코드 등록</DialogTitle>
+        <DialogTitle id="simple-dialog-title">공통코드그룹 등록</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            등록된 코드는 와스 재기동후에야 정상적으로 동작합니다.
-            <br />
-            코드는 숫자로만 기입해 주세요.
+            사용여부 수정시 바로 적용됩니다.
           </DialogContentText>
           <ValidationForm onSubmit={handleSubmit}>
             <Input type="hidden" name="uid" value={form.uid} />
             <Grid container>
               <Grid item container xs={12}>
-                <AutoComplete
-                  label={"공통코드그룹"}
-                  placeholder={"입력문자열로 자동검색합니다."}
-                  name={"bcg"}
-                  value={{ label: form.bcgn, value: form.bcgu }}
-                  loadOptions={handleLoadOptions}
-                  onChanges={handleAutoCompleteChange}
-                  maxMenuHeight={150}
-                  autoFocus={true}
-                />
-              </Grid>
-              <Grid item container xs={12}>
-                <Grid item container xs={6}>
-                  <Input
-                    required
-                    isNumber
-                    maxNumber={999999999}
-                    name="code"
-                    label="코드"
-                    value={form.code}
-                    onChangeInput={handleChangeInput}
-                  />
-                </Grid>
                 <Grid item container xs={6}>
                   <Input
                     required
                     maxLength={20}
                     name="name"
-                    label="코드명"
+                    label="그룹명"
                     value={form.name}
-                    onChangeInput={handleChangeInput}
-                  />
-                </Grid>
-              </Grid>
-              <Grid item container xs={12}>
-                <Grid item container xs={6}>
-                  <Input
-                    required
-                    isNumber
-                    name="ordered"
-                    label="순서"
-                    value={form.ordered}
                     onChangeInput={handleChangeInput}
                   />
                 </Grid>

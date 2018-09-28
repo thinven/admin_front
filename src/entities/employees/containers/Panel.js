@@ -63,16 +63,16 @@ class Panel extends Component {
 
   render() {
     const {
-      ListActions,
-      FormActions,
-      handleSendMsg,
-      classes,
-      form,
       result,
       list,
       pages,
       loading,
-      genderCodes
+      ListActions,
+      form,
+      FormActions,
+      genderCodes,
+      classes,
+      handleSendMsg
     } = this.props;
     const { contentWrap } = classes;
     const { handleOpenForm, handleOpenEditForm, handleDeleteConfirm } = this;
@@ -82,9 +82,9 @@ class Panel extends Component {
         <List
           list={list}
           pages={pages}
-          genderCodes={genderCodes}
           listLoading={loading}
           ListActions={ListActions}
+          genderCodes={genderCodes}
           handleOpenEditForm={handleOpenEditForm}
           handleDeleteConfirm={handleDeleteConfirm}
         />
@@ -92,9 +92,9 @@ class Panel extends Component {
           innerRef={node => (this._form = node)}
           form={form}
           result={result}
-          genderCodes={genderCodes}
           FormActions={FormActions}
           ListActions={ListActions}
+          genderCodes={genderCodes}
           handleSendMsg={handleSendMsg}
         />
       </section>
@@ -107,9 +107,9 @@ export default compose(
   connect(
     ({ employeeList, employeeForm }) => ({
       list: employeeList.get("list"),
-      genderCodes: employeeList.get("genderCodes").toJS(),
       pages: employeeList.get("pages"),
       loading: employeeList.get("loading"),
+      genderCodes: employeeList.get("genderCodes").toJS(),
       form: employeeForm.get("form").toJS(),
       result: employeeForm.get("result").toJS()
     }),

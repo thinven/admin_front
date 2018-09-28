@@ -69,7 +69,12 @@ class List extends Component {
   };
   info = ({ original }) => {
     const { commonCodeGroup, code, name, ordered, use } = original;
-    const { classes, onEditForm, onDeleteConfirm, useCodes } = this.props;
+    const {
+      classes,
+      handleOpenEditForm,
+      handleOpenGroupForm,
+      useCodes
+    } = this.props;
     const { root, infoActions, btnActions } = classes;
     return (
       <Paper className={root}>
@@ -104,7 +109,7 @@ class List extends Component {
         <Grid container className={infoActions}>
           <Grid item container xs={12} justify="center">
             <Button
-              onClick={() => onEditForm(original)}
+              onClick={() => handleOpenEditForm(original)}
               variant="outlined"
               color="primary"
               className={btnActions}
@@ -112,7 +117,7 @@ class List extends Component {
               코드수정
             </Button>
             <Button
-              onClick={() => onDeleteConfirm(original)}
+              onClick={() => handleOpenGroupForm(original)}
               variant="outlined"
               className={btnActions}
             >

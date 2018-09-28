@@ -12,6 +12,8 @@ const DEL_COMMONCODE = "list/DEL_COMMONCODE";
 const START_LOADING = "list/START_LOADING";
 const GET_COMMONCODES = "list/GET_COMMONCODES";
 
+const PATCH_COMMONCODEGROUP = "list/PATCH_COMMONCODEGROUP";
+
 // action creators
 export const initialize = createAction(INITIALIZE);
 export const addCommonCode = createAction(ADD_COMMONCODE);
@@ -19,6 +21,8 @@ export const patchCommonCode = createAction(PATCH_COMMONCODE);
 export const delCommonCode = createAction(DEL_COMMONCODE);
 export const startLoading = createAction(START_LOADING);
 export const getCommonCodes = createAction(GET_COMMONCODES, api.getCommonCodes);
+
+export const patchCommonCodeGroup = createAction(PATCH_COMMONCODEGROUP);
 
 // initial state
 const initialState = Map({
@@ -82,7 +86,20 @@ export default handleActions(
           .set("pages", commonCodePages)
           .set("loading", false);
       }
-    })
+    }),
+    [PATCH_COMMONCODEGROUP]: (state, action) => {
+      const { uid, name, use } = action.payload;
+      let list = state.get("list").map(item => {
+        if (item.getIn(["commonCodeGroup", "uid"]) === uid) {
+          return item
+            .setIn(["commonCodeGroup", "name"], name)
+            .setIn(["commonCodeGroup", "use"], use);
+        } else {
+          return item;
+        }
+      });
+      return state.set("list", list);
+    }
   },
   initialState
 );

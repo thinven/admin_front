@@ -7,12 +7,14 @@ import compose from "recompose/compose";
 import { withStyles } from "@material-ui/core/styles";
 
 import { Header, List, Form } from "../components";
+import { Form as GroupForm } from "entities/common-code-groups/components";
 
 import * as listActions from "../store/list";
-import * as formActions from "../store/form";
 import * as infoActions from "../store/info";
+import * as formActions from "../store/form";
 
 import * as groupListActions from "entities/common-code-groups/store/list";
+import * as groupFormActions from "entities/common-code-groups/store/form";
 
 const styles = theme => ({
   contentWrap: {
@@ -38,70 +40,63 @@ class Panel extends Component {
   handleOpenEditForm = original => {
     this._form.handleOpenEdit(original);
   };
-  //===========================================================================
-
-  /**
-   * 삭제 관련 이벤트.
-   */
-  handleDeleteConfirm = original => {
-    const { FormActions, ListActions, handleConfirm } = this.props;
-    FormActions.loadCommonCode({
-      info: original
-    });
-    handleConfirm({
-      title: "삭제 알림",
-      desc: original.id + "님을 삭제 하시겠습니까?",
-      onOk: async () => {
-        try {
-          await FormActions.delCommonCode(original);
-          ListActions.delCommonCode(original);
-        } catch (e) {
-          console.log(e);
-        }
-      }
-    });
+  handleOpenGroupForm = original => {
+    this._groupForm.handleOpenEdit(original);
   };
   //===========================================================================
 
   render() {
     const {
-      FormActions,
-      ListActions,
-      GroupListActions,
-      form,
       result,
-      info,
-      groupList,
       list,
       pages,
       loading,
+      ListActions,
+      form,
+      info,
+      FormActions,
+      groupList,
+      GroupListActions,
+      groupResult,
+      groupForm,
+      GroupFormActions,
       useCodes,
-      classes
+      classes,
+      handleSendMsg
     } = this.props;
     const { contentWrap } = classes;
-    const { handleOpenForm, handleOpenEditForm, handleDeleteConfirm } = this;
+    const { handleOpenForm, handleOpenEditForm, handleOpenGroupForm } = this;
     return (
       <section className={contentWrap}>
         <Header handleOpenForm={handleOpenForm} />
         <List
           list={list}
           pages={pages}
-          useCodes={useCodes}
           listLoading={loading}
           ListActions={ListActions}
-          onEditForm={handleOpenEditForm}
-          onDeleteConfirm={handleDeleteConfirm}
+          useCodes={useCodes}
+          handleOpenEditForm={handleOpenEditForm}
+          handleOpenGroupForm={handleOpenGroupForm}
         />
         <Form
           innerRef={node => (this._form = node)}
-          form={form}
           result={result}
+          form={form}
           info={info}
-          useCodes={useCodes}
-          groupList={groupList}
           FormActions={FormActions}
           ListActions={ListActions}
+          groupList={groupList}
           GroupListActions={GroupListActions}
+          useCodes={useCodes}
+          handleSendMsg={handleSendMsg}
+        />
+        <GroupForm
+          innerRef={node => (this._groupForm = node)}
+          result={groupResult}
+          form={groupForm}
+          FormActions={GroupFormActions}
+          CommonCodeListActions={ListActions}
+          useCodes={useCodes}
         />
       </section>
     );
@@ -111,21 +106,29 @@ class Panel extends Component {
 export default compose(
   withStyles(styles, { name: "Panel" }),
   connect(
-    ({ commonCodeList, commonCodeForm, commonCodeGroupList }) => ({
+    ({
+      commonCodeList,
+      commonCodeForm,
+      commonCodeGroupList,
+      commonCodeGroupForm
+    }) => ({
       list: commonCodeList.get("list"),
       useCodes: commonCodeList.get("useCodes").toJS(),
       pages: commonCodeList.get("pages"),
       loading: commonCodeList.get("loading"),
-      groupList: commonCodeGroupList.get("list").toJS(),
       form: commonCodeForm.get("form").toJS(),
       info: commonCodeForm.get("info").toJS(),
-      result: commonCodeForm.get("result").toJS()
+      result: commonCodeForm.get("result").toJS(),
+      groupList: commonCodeGroupList.get("list").toJS(),
+      groupForm: commonCodeGroupForm.get("form").toJS(),
+      groupResult: commonCodeGroupForm.get("result").toJS()
     }),
     dispatch => ({
       ListActions: bindActionCreators(listActions, dispatch),
-      FormActions: bindActionCreators(formActions, dispatch),
       InfoActions: bindActionCreators(infoActions, dispatch),
-      GroupListActions: bindActionCreators(groupListActions, dispatch)
+      FormActions: bindActionCreators(formActions, dispatch),
+      GroupListActions: bindActionCreators(groupListActions, dispatch),
+      GroupFormActions: bindActionCreators(groupFormActions, dispatch)
     })
   )
 )(withRouter(Panel));
