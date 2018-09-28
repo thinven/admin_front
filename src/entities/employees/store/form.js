@@ -1,6 +1,6 @@
 import { createAction, handleActions } from "redux-actions";
 
-import { Map } from "immutable";
+import { Map, fromJS } from "immutable";
 import { pender } from "redux-pender";
 
 import * as api from "./api";
@@ -37,7 +37,8 @@ const initialState = Map({
     gender: 10,
     phone: "",
     email: "",
-    id: ""
+    id: "",
+    rolejson: ""
   })
 });
 
@@ -63,7 +64,7 @@ export default handleActions(
     },
     [LOAD_EMPLOYEE]: (state, action) => {
       const { info } = action.payload;
-      return state.set("form", Map(info));
+      return state.set("form", fromJS(info));
     },
     ...pender({
       type: ADD_EMPLOYEE,

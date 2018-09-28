@@ -3,9 +3,16 @@ import penderMiddleware from "redux-pender";
 
 import * as commonCodeGroups from "entities/common-code-groups/store";
 import * as commonCodes from "entities/common-codes/store";
+import * as roles from "entities/roles/store";
 import * as employees from "entities/employees/store";
 
-const allReducers = Object.assign({}, commonCodeGroups, commonCodes, employees);
+const allReducers = Object.assign(
+  {},
+  commonCodeGroups,
+  commonCodes,
+  roles,
+  employees
+);
 
 const reducers = combineReducers(allReducers);
 const middlewares = [penderMiddleware()];

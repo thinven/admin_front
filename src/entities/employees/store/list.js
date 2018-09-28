@@ -4,6 +4,8 @@ import { Map, List, fromJS } from "immutable";
 import { pender } from "redux-pender";
 import * as api from "./api";
 
+import { Json } from "support/utils";
+
 // action types
 const INITIALIZE = "list/INITIALIZE";
 const ADD_EMPLOYEE = "list/ADD_EMPLOYEE";
@@ -76,8 +78,12 @@ export default handleActions(
           employeePages,
           genderCodes
         } = action.payload.data;
+        let employeeListTrans = employeeList.map(employee => {
+          employee.rolejson = Json.parse(employee.rolejson);
+          return employee;
+        });
         return state
-          .set("list", fromJS(employeeList))
+          .set("list", fromJS(employeeListTrans))
           .set("genderCodes", fromJS(genderCodes))
           .set("pages", employeePages)
           .set("loading", false);

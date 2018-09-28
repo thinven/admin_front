@@ -28,6 +28,10 @@ class Form extends Component {
     open: false
   };
   //===========================================================================
+
+  /**
+   * 등록폼 열기/닫기 메소드.
+   */
   handleOpen = () => {
     const { FormActions } = this.props;
     FormActions.initialize();
@@ -35,6 +39,28 @@ class Form extends Component {
       open: true
     });
   };
+  handleClose = () => {
+    this.setState({ open: false });
+  };
+  //===========================================================================
+
+  /**
+   * 수정폼 열기 메소드.
+   */
+  handleOpenEdit = original => {
+    const { FormActions } = this.props;
+    FormActions.loadCommonCode({
+      info: original
+    });
+    this.setState({
+      open: true
+    });
+  };
+  //===========================================================================
+
+  /**
+   * 사용자 입력 관련 메소드.
+   */
   handleLoadOptions = async (inputValue, callback) => {
     const { GroupListActions } = this.props;
     try {
@@ -51,8 +77,14 @@ class Form extends Component {
   };
   handleAutoCompleteChange = (name, val) => {
     const { FormActions } = this.props;
-    FormActions.changeInput({ name: name + "n", value: val.label });
-    FormActions.changeInput({ name: name + "u", value: val.value });
+    FormActions.changeInput({
+      name: name + "n",
+      value: val.label ? val.label : ""
+    });
+    FormActions.changeInput({
+      name: name + "u",
+      value: val.value ? val.value : ""
+    });
   };
   handleChangeInput = e => {
     const { FormActions } = this.props;
@@ -81,20 +113,8 @@ class Form extends Component {
       console.log("handleSubmit catch", e);
     }
   };
-  handleClose = () => {
-    this.setState({ open: false });
-  };
   //===========================================================================
-  handleOpenEdit = original => {
-    const { FormActions } = this.props;
-    FormActions.loadCommonCode({
-      info: original
-    });
-    this.setState({
-      open: true
-    });
-  };
-  //===========================================================================
+
   render() {
     const {
       handleLoadOptions,

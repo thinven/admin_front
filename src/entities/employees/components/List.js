@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 
+import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 
-import { withStyles } from "@material-ui/core/styles";
-
-import { Table, ReadOnly } from "support/wrapper";
+import { Table, ReadOnly, AutoComplete } from "support/wrapper";
 import { Codes } from "support/utils";
 import { columns } from "./List.Header";
 
@@ -68,7 +67,15 @@ class List extends Component {
     });
   };
   info = ({ original }) => {
-    const { firstname, lastname, birthday, gender, phone, email } = original;
+    const {
+      firstname,
+      lastname,
+      birthday,
+      gender,
+      phone,
+      email,
+      rolejson
+    } = original;
     const {
       classes,
       handleOpenEditForm,
@@ -80,26 +87,36 @@ class List extends Component {
       <Paper className={root}>
         <Grid container>
           <Grid item container xs={4} />
-          <Grid item container xs={4} alignItems="flex-start">
-            <Grid item xs={12}>
-              <ReadOnly label="이름" value={firstname} />
+          <Grid item container xs={8}>
+            <Grid item container xs={12}>
+              <AutoComplete isMulti isDisabled label="역할" value={rolejson} />
             </Grid>
-            <Grid item xs={12}>
-              <ReadOnly label="생일" value={birthday} />
+            <Grid item container xs={12}>
+              <Grid item container xs={6}>
+                <ReadOnly label="이름" value={firstname} />
+              </Grid>
+              <Grid item container xs={6}>
+                <ReadOnly label="성" value={lastname} />
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <ReadOnly label="핸드폰" value={phone} />
+            <Grid item container xs={12}>
+              <Grid item container xs={6}>
+                <ReadOnly label="생일" value={birthday} />
+              </Grid>
+              <Grid item container xs={6}>
+                <ReadOnly
+                  label="성별"
+                  value={Codes.label(genderCodes, gender)}
+                />
+              </Grid>
             </Grid>
-          </Grid>
-          <Grid item container xs={4}>
-            <Grid item xs={12}>
-              <ReadOnly label="성" value={lastname} />
-            </Grid>
-            <Grid item xs={12}>
-              <ReadOnly label="성별" value={Codes.label(genderCodes, gender)} />
-            </Grid>
-            <Grid item xs={12}>
-              <ReadOnly label="이메일" value={email} />
+            <Grid item container xs={12}>
+              <Grid item container xs={6}>
+                <ReadOnly label="핸드폰" value={phone} />
+              </Grid>
+              <Grid item container xs={6}>
+                <ReadOnly label="이메일" value={email} />
+              </Grid>
             </Grid>
           </Grid>
         </Grid>

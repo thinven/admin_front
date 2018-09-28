@@ -12,7 +12,7 @@ import Grid from "@material-ui/core/Grid";
 import { Result } from "common/constant";
 
 import { ValidationForm } from "support/validator";
-import { Input } from "support/wrapper";
+import { Input, AutoComplete } from "support/wrapper";
 import { HpMaskedInput } from "support/wrapper/maskedinput";
 
 const styles = theme => ({
@@ -29,11 +29,59 @@ class Form extends Component {
     open: false
   };
   //===========================================================================
+
+  /**
+   * 등록폼 열기/닫기 메소드.
+   */
   handleOpen = () => {
     const { FormActions } = this.props;
     FormActions.initialize();
     this.setState({
       open: true
+    });
+  };
+  handleClose = () => {
+    this.setState({ open: false });
+  };
+  //===========================================================================
+
+  /**
+   * 수정폼 열기 메소드
+   */
+  handleOpenEdit = original => {
+    const { FormActions } = this.props;
+    FormActions.loadEmployee({
+      info: original
+    });
+    this.setState({
+      open: true
+    });
+  };
+  //===========================================================================
+
+  /**
+   * 사용자 입력 관련 메소드.
+   */
+  handleLoadOptions = async (inputValue, callback) => {
+    const { RoleListActions } = this.props;
+    try {
+      await RoleListActions.getRoles({ name: inputValue });
+      callback(
+        this.props.roleList.map(role => ({
+          value: role.uid,
+          label: role.name
+        }))
+      );
+    } catch (e) {
+      console.log("handleLoadOptions catch", e);
+    }
+  };
+  handleAutoCompleteChange = (name, values) => {
+    const { FormActions } = this.props;
+    const value = values.map(val => ({ label: val.label, value: val.value }));
+    FormActions.changeInput({
+      name,
+      value
     });
   };
   handleChangeInput = e => {
@@ -44,6 +92,7 @@ class Form extends Component {
   handleSubmit = async () => {
     const { form, FormActions, ListActions, handleSendMsg } = this.props;
     try {
+      console.log("submit", form);
       if (form.uid) {
         await FormActions.patchEmployee(form);
       } else {
@@ -63,25 +112,18 @@ class Form extends Component {
       console.log(e);
     }
   };
-  handleClose = () => {
-    this.setState({ open: false });
-  };
   //===========================================================================
-  handleOpenEdit = original => {
-    const { FormActions } = this.props;
-    FormActions.loadEmployee({
-      info: original
-    });
-    this.setState({
-      open: true
-    });
-  };
-  //===========================================================================
+
   render() {
-    const { handleChangeInput, handleSubmit, handleClose } = this;
+    const {
+      handleLoadOptions,
+      handleAutoCompleteChange,
+      handleChangeInput,
+      handleSubmit,
+      handleClose
+    } = this;
     const { classes, form, genderCodes } = this.props;
     const { buttonWrap, button } = classes;
-
     return (
       <Dialog
         onClose={handleClose}
@@ -98,6 +140,18 @@ class Form extends Component {
             <Input type="hidden" name="uid" value={form.uid} />
             <Grid container>
               <Grid item container xs={12}>
+                <AutoComplete
+                  isMulti
+                  label={"역할"}
+                  placeholder={"입력문자열로 자동검색합니다."}
+                  name={"rolejson"}
+                  value={form.rolejson}
+                  loadOptions={handleLoadOptions}
+                  onChanges={handleAutoCompleteChange}
+                  autoFocus={true}
+                />
+              </Grid>
+              <Grid item container xs={12}>
                 <Grid item container xs={6}>
                   <Input
                     required
@@ -107,7 +161,6 @@ class Form extends Component {
                     label="로그인ID"
                     value={form.id}
                     onChangeInput={handleChangeInput}
-                    autoFocus={true}
                   />
                 </Grid>
                 <Grid item container xs={6}>

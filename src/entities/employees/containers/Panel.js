@@ -12,6 +12,8 @@ import * as listActions from "../store/list";
 import * as formActions from "../store/form";
 import * as infoActions from "../store/info";
 
+import * as roleListActions from "entities/roles/store/list";
+
 const styles = theme => ({
   contentWrap: {
     padding: theme.spacing.unit,
@@ -70,6 +72,8 @@ class Panel extends Component {
       ListActions,
       form,
       FormActions,
+      roleList,
+      RoleListActions,
       genderCodes,
       classes,
       handleSendMsg
@@ -94,6 +98,8 @@ class Panel extends Component {
           result={result}
           FormActions={FormActions}
           ListActions={ListActions}
+          roleList={roleList}
+          RoleListActions={RoleListActions}
           genderCodes={genderCodes}
           handleSendMsg={handleSendMsg}
         />
@@ -105,18 +111,20 @@ class Panel extends Component {
 export default compose(
   withStyles(styles, { name: "Panel" }),
   connect(
-    ({ employeeList, employeeForm }) => ({
+    ({ employeeList, employeeForm, roleList }) => ({
       list: employeeList.get("list"),
       pages: employeeList.get("pages"),
       loading: employeeList.get("loading"),
       genderCodes: employeeList.get("genderCodes").toJS(),
       form: employeeForm.get("form").toJS(),
-      result: employeeForm.get("result").toJS()
+      result: employeeForm.get("result").toJS(),
+      roleList: roleList.get("list").toJS()
     }),
     dispatch => ({
       ListActions: bindActionCreators(listActions, dispatch),
+      InfoActions: bindActionCreators(infoActions, dispatch),
       FormActions: bindActionCreators(formActions, dispatch),
-      InfoActions: bindActionCreators(infoActions, dispatch)
+      RoleListActions: bindActionCreators(roleListActions, dispatch)
     })
   )
 )(withRouter(Panel));
