@@ -9,6 +9,8 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import MenuItem from "@material-ui/core/MenuItem";
 import Grid from "@material-ui/core/Grid";
 
+import { Result } from "common/constant";
+
 import { ValidationForm } from "support/validator";
 import { Input } from "support/wrapper";
 import { HpMaskedInput } from "support/wrapper/maskedinput";
@@ -47,7 +49,7 @@ class Form extends Component {
       } else {
         await FormActions.addEmployee(form);
       }
-      if (this.props.result.key === "SUCCESS") {
+      if (this.props.result.key === Result.SUCCESS) {
         if (form.uid) {
           ListActions.patchEmployee(form);
         } else {

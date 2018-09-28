@@ -9,6 +9,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import MenuItem from "@material-ui/core/MenuItem";
 import Grid from "@material-ui/core/Grid";
 
+import { Result } from "common/constant";
 import { ValidationForm } from "support/validator";
 import { Input } from "support/wrapper";
 
@@ -47,7 +48,7 @@ class Form extends Component {
     } = this.props;
     try {
       await FormActions.patchCommonCodeGroup(form);
-      if (this.props.result.key === "SUCCESS") {
+      if (this.props.result.key === Result.SUCCESS) {
         CommonCodeListActions.patchCommonCodeGroup(form);
         this.handleClose();
       } else {

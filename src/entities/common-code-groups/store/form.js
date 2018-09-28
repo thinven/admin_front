@@ -2,7 +2,10 @@ import { createAction, handleActions } from "redux-actions";
 
 import { Map, fromJS } from "immutable";
 import { pender } from "redux-pender";
+
 import * as api from "./api";
+
+import { Result } from "common/constant";
 
 // action types
 const INITIALIZE = "commonCodeGroups/INITIALIZE";
@@ -32,7 +35,7 @@ export const delCommonCodeGroup = createAction(
 // initial state
 const initialState = Map({
   result: Map({
-    key: "SUCCESS",
+    key: Result.SUCCESS,
     desc: ""
   }),
   form: Map({
@@ -46,7 +49,7 @@ const initialState = Map({
 
 const onSuccess = (state, action) => {
   const { key, desc, commonCodeGroup } = action.payload.data;
-  if (key === "SUCCESS") {
+  if (key === Result.SUCCESS) {
     return state
       .setIn(["form", "uid"], commonCodeGroup.uid)
       .set("info", fromJS(commonCodeGroup))
