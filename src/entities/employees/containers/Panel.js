@@ -80,6 +80,7 @@ class Panel extends Component {
     } = this.props;
     const { contentWrap } = classes;
     const { handleOpenForm, handleOpenEditForm, handleDeleteConfirm } = this;
+
     return (
       <section className={contentWrap}>
         <Header handleOpenForm={handleOpenForm} />

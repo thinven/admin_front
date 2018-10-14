@@ -5,13 +5,15 @@ import * as commonCodeGroups from "entities/common-code-groups/store";
 import * as commonCodes from "entities/common-codes/store";
 import * as roles from "entities/roles/store";
 import * as employees from "entities/employees/store";
+import * as employeeAuth from "entities/employee-auth/store";
 
 const allReducers = Object.assign(
   {},
   commonCodeGroups,
   commonCodes,
   roles,
-  employees
+  employees,
+  employeeAuth
 );
 
 const reducers = combineReducers(allReducers);

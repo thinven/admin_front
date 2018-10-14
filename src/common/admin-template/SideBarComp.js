@@ -53,6 +53,7 @@ class SideBar extends Component {
   nextPath(path) {
     this.props.history.push(path);
   }
+  //===========================================================================
 
   render() {
     const { classes, theme, drawerOpen, onClose } = this.props;

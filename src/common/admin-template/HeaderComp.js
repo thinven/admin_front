@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
+
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -50,6 +51,9 @@ const styles = theme => ({
     [theme.breakpoints.up("md")]: {
       display: "flex"
     }
+  },
+  none: {
+    display: "none"
   }
 });
 
@@ -57,6 +61,14 @@ class Header extends Component {
   state = {
     profileOpen: false
   };
+  //===========================================================================
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (this.props.loginInfoIm !== nextProps.loginInfoIm) return true;
+    if (this.state.profileOpen !== nextState.profileOpen) return true;
+    return false;
+  }
+  //===========================================================================
 
   handleToggle = () => {
     this.setState(state => ({ profileOpen: !state.profileOpen }));
@@ -66,13 +78,25 @@ class Header extends Component {
     if (this.anchorEl.contains(event.target)) {
       return;
     }
-
     this.setState({ profileOpen: false });
   };
+  //===========================================================================
+
+  handleLoginForm = () => {
+    this.props.handleLoginForm();
+  };
+  handleLogout = () => {
+    const { LoginFormActions } = this.props;
+    LoginFormActions.clearEmployeeAuth();
+  };
+  //===========================================================================
+
   render() {
+    const { handleClose, handleToggle, handleLoginForm, handleLogout } = this;
     const { profileOpen } = this.state;
-    const { classes, drawerOpen, onOpen } = this.props;
+    const { classes, drawerOpen, onOpen, loginInfo } = this.props;
     const {
+      none,
       appBar,
       appBarShift,
       menuButton,
@@ -108,7 +132,7 @@ class Header extends Component {
               }}
               aria-owns={profileOpen ? "menu-list-grow" : null}
               aria-haspopup="true"
-              onClick={this.handleToggle}
+              onClick={handleToggle}
             >
               <AccountCircleIcon />
             </IconButton>
@@ -131,13 +155,22 @@ class Header extends Component {
                   }}
                 >
                   <Paper>
-                    <ClickAwayListener onClickAway={this.handleClose}>
+                    <ClickAwayListener onClickAway={handleClose}>
                       <MenuList>
-                        <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-                        <MenuItem onClick={this.handleClose}>
-                          My account
+                        <MenuItem
+                          onClick={handleLoginForm}
+                          className={loginInfo.id ? none : ""}
+                        >
+                          로그인
                         </MenuItem>
-                        <MenuItem onClick={this.handleClose}>Logout</MenuItem>
+                        <MenuItem
+                          onClick={handleLogout}
+                          className={loginInfo.id ? "" : none}
+                        >
+                          로그아웃
+                        </MenuItem>
+                        <MenuItem onClick={handleClose}>My account</MenuItem>
+                        <MenuItem onClick={handleClose}>Logout</MenuItem>
                       </MenuList>
                     </ClickAwayListener>
                   </Paper>
@@ -151,4 +184,4 @@ class Header extends Component {
   }
 }
 
-export default withStyles(styles)(Header);
+export default withStyles(styles, { withTheme: true })(withRouter(Header));

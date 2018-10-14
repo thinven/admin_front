@@ -1,4 +1,8 @@
 import React, { Component, Fragment } from "react";
+import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import compose from "recompose/compose";
 
 import { withStyles } from "@material-ui/core/styles";
 
@@ -6,6 +10,8 @@ import Header from "./HeaderComp";
 import SideBar from "./SideBarComp";
 
 import { Message, Confirm } from "support/wrapper";
+import { LoginForm } from "entities/employee-auth/components";
+import * as loginFormActions from "entities/employee-auth/store/form";
 
 const styles = theme => ({
   root: {
@@ -35,6 +41,7 @@ class AdminTemplate extends Component {
     msgOpen: false,
     desc: ""
   };
+  //===========================================================================
 
   handleDrawerOpen = () => {
     this.setState({ drawerOpen: true });
@@ -56,12 +63,31 @@ class AdminTemplate extends Component {
     });
   };
   handleConfirm = actions => {
-    this.alert.handleOpen(actions);
+    this._alert.handleOpen(actions);
   };
+  handleLoginForm = () => {
+    this._loginForm.handleOpen();
+  };
+  //===========================================================================
+
   render() {
-    const { handleDrawerOpen, handleDrawerClose, handleCloseMsg } = this;
+    const {
+      handleDrawerOpen,
+      handleDrawerClose,
+      handleCloseMsg,
+      handleSendMsg,
+      handleLoginForm
+    } = this;
     const { drawerOpen, msgOpen, desc } = this.state;
-    const { classes, children } = this.props;
+    const {
+      classes,
+      children,
+      loginForm,
+      loginResult,
+      loginInfo,
+      loginInfoIm,
+      LoginFormActions
+    } = this.props;
     const { root, content, toolbar } = classes;
     const childrenWithProps = React.Children.map(children, child =>
       React.cloneElement(child, {
@@ -72,7 +98,14 @@ class AdminTemplate extends Component {
     return (
       <Fragment>
         <section className={root}>
-          <Header drawerOpen={drawerOpen} onOpen={handleDrawerOpen} />
+          <Header
+            handleLoginForm={handleLoginForm}
+            loginInfoIm={loginInfoIm}
+            loginInfo={loginInfo}
+            LoginFormActions={LoginFormActions}
+            drawerOpen={drawerOpen}
+            onOpen={handleDrawerOpen}
+          />
           <SideBar drawerOpen={drawerOpen} onClose={handleDrawerClose} />
           <main className={content}>
             <div className={toolbar} />
@@ -80,10 +113,31 @@ class AdminTemplate extends Component {
           </main>
         </section>
         <Message open={msgOpen} desc={desc} onClose={handleCloseMsg} />
-        <Confirm ref={ref => (this.alert = ref)} />
+        <Confirm ref={ref => (this._alert = ref)} />
+        <LoginForm
+          innerRef={node => (this._loginForm = node)}
+          form={loginForm}
+          result={loginResult}
+          info={loginInfo}
+          FormActions={LoginFormActions}
+          handleSendMsg={handleSendMsg}
+        />
       </Fragment>
     );
   }
 }
 
-export default withStyles(styles)(AdminTemplate);
+export default compose(
+  withStyles(styles, { name: "AdminTemplate" }),
+  connect(
+    ({ employeeAuthForm }) => ({
+      loginForm: employeeAuthForm.get("form").toJS(),
+      loginResult: employeeAuthForm.get("result").toJS(),
+      loginInfo: employeeAuthForm.get("info").toJS(),
+      loginInfoIm: employeeAuthForm.get("info")
+    }),
+    dispatch => ({
+      LoginFormActions: bindActionCreators(loginFormActions, dispatch)
+    })
+  )
+)(withRouter(AdminTemplate));

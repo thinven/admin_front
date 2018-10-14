@@ -33,6 +33,8 @@ class List extends Component {
   state = {
     expanded: {}
   };
+  //===========================================================================
+
   shouldComponentUpdate(nextProps, nextState) {
     if (this.props.list !== nextProps.list) return true;
     if (this.state.expanded !== nextState.expanded) return true;
