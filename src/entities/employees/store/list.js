@@ -78,15 +78,17 @@ export default handleActions(
           employeePages,
           genderCodes
         } = action.payload.data;
-        let employeeListTrans = employeeList.map(employee => {
-          employee.rolejson = Json.parse(employee.rolejson);
-          return employee;
-        });
-        return state
-          .set("list", fromJS(employeeListTrans))
-          .set("genderCodes", fromJS(genderCodes))
-          .set("pages", employeePages)
-          .set("loading", false);
+        if (genderCodes) {
+          let employeeListTrans = employeeList.map(employee => {
+            employee.rolejson = Json.parse(employee.rolejson);
+            return employee;
+          });
+          return state
+            .set("list", fromJS(employeeListTrans))
+            .set("genderCodes", fromJS(genderCodes))
+            .set("pages", employeePages)
+            .set("loading", false);
+        } else return initialState;
       }
     })
   },

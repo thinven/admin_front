@@ -30,10 +30,12 @@ export default handleActions(
           commonCodeGroupList,
           commonCodeGroupPages
         } = action.payload.data;
-        return state
-          .set("list", fromJS(commonCodeGroupList))
-          .set("pages", commonCodeGroupPages)
-          .set("loading", false);
+        if (commonCodeGroupList)
+          return state
+            .set("list", fromJS(commonCodeGroupList))
+            .set("pages", commonCodeGroupPages)
+            .set("loading", false);
+        else return initialState;
       }
     })
   },

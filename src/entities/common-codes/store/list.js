@@ -80,11 +80,13 @@ export default handleActions(
           commonCodePages,
           useCodes
         } = action.payload.data;
-        return state
-          .set("list", fromJS(commonCodeList))
-          .set("useCodes", fromJS(useCodes))
-          .set("pages", commonCodePages)
-          .set("loading", false);
+        if (useCodes)
+          return state
+            .set("list", fromJS(commonCodeList))
+            .set("useCodes", fromJS(useCodes))
+            .set("pages", commonCodePages)
+            .set("loading", false);
+        else return initialState;
       }
     }),
     [PATCH_COMMONCODEGROUP]: (state, action) => {
