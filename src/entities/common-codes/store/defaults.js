@@ -4,20 +4,18 @@ import { Result } from "common/constant";
 
 const defaults = Map({
   list: List(),
-  genderCodes: List(),
+  useCodes: List(),
   pages: null,
   loading: false,
   info: Map({}),
   form: Map({
     uid: "",
-    firstname: "",
-    lastname: "",
-    birthday: "",
-    gender: 10,
-    phone: "",
-    email: "",
-    id: "",
-    rolejson: ""
+    code: "",
+    name: "",
+    ordered: 0,
+    use: 10,
+    bcgu: "",
+    bcgn: ""
   }),
   result: Map({
     key: Result.SUCCESS,

@@ -1,3 +1,2 @@
-export { default as commonCodeGroupList } from "./list";
-export { default as commonCodeGroupForm } from "./form";
+export { default as commonCodeGroupReducer } from "./reducer";
 export { penderReducer as pender } from "redux-pender";

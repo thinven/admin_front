@@ -28,28 +28,23 @@ class Form extends Component {
   };
   //===========================================================================
   handleOpen = () => {
-    const { FormActions } = this.props;
-    FormActions.initialize();
+    const { Actions } = this.props;
+    Actions.initForm();
     this.setState({
       open: true
     });
   };
   handleChangeInput = e => {
-    const { FormActions } = this.props;
+    const { Actions } = this.props;
     const { name, value } = e.target;
-    FormActions.changeInput({ name, value });
+    Actions.changeInput({ name, value });
   };
   handleSubmit = async () => {
-    const {
-      form,
-      FormActions,
-      CommonCodeListActions,
-      handleSendMsg
-    } = this.props;
+    const { form, Actions, CommonCodeActions, handleSendMsg } = this.props;
     try {
-      await FormActions.patchCommonCodeGroup(form);
+      await Actions.patchCommonCodeGroup(form);
       if (this.props.result.key === Result.SUCCESS) {
-        CommonCodeListActions.patchCommonCodeGroup(form);
+        CommonCodeActions.refreshCommonCodes(form);
         this.handleClose();
       } else {
         handleSendMsg(this.props.result);
@@ -63,8 +58,8 @@ class Form extends Component {
   };
   //===========================================================================
   handleOpenEdit = original => {
-    const { FormActions } = this.props;
-    FormActions.loadCommonCodeGroup({
+    const { Actions } = this.props;
+    Actions.loadForm({
       info: original.commonCodeGroup
     });
     this.setState({

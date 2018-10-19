@@ -11,7 +11,6 @@ import { Json, ApiSuccess } from "support/utils";
 // action types
 const LOAD_EMPLOYEES = "employees/LOAD_EMPLOYEES";
 const GET_EMPLOYEES = "employees/GET_EMPLOYEES";
-//-----------------------------------------------------------------------------
 const LOAD_EMPLOYEE = "employees/LOAD_EMPLOYEE";
 const GET_EMPLOYEE = "employees/GET_EMPLOYEE";
 //-----------------------------------------------------------------------------
@@ -25,7 +24,6 @@ const DEL_EMPLOYEE = "employees/DEL_EMPLOYEE";
 // action creators
 export const loadEmployees = createAction(LOAD_EMPLOYEES);
 export const getEmployees = createAction(GET_EMPLOYEES, api.getEmployees);
-//-----------------------------------------------------------------------------
 export const loadEmployee = createAction(LOAD_EMPLOYEE);
 export const getEmployee = createAction(GET_EMPLOYEE, api.getEmployee);
 //-----------------------------------------------------------------------------
@@ -36,7 +34,7 @@ export const patchEmployee = createAction(PATCH_EMPLOYEE, api.patchEmployee);
 export const delEmployee = createAction(DEL_EMPLOYEE, api.delEmployee);
 //=============================================================================
 
-const listSuccess = (state, action) => {
+const reduceList = (state, action) => {
   const { employeeList, employeePages, genderCodes } = action.payload.data;
   let employeeListTrans = employeeList.map(employee => {
     employee.rolejson = Json.parse(employee.rolejson);
@@ -48,19 +46,18 @@ const listSuccess = (state, action) => {
     .set("pages", employeePages)
     .set("loading", false);
 };
-//-----------------------------------------------------------------------------
 const reduceInfo = (state, action) => {
   const { info } = action.payload.data;
   return state.set("info", fromJS(info));
 };
 //-----------------------------------------------------------------------------
-const addSuccess = (state, action) => {
+const reduceAdd = (state, action) => {
   const { employee } = action.payload.data;
   return state
     .setIn(["form", "uid"], employee.uid)
     .set("list", state.get("list").unshift(fromJS(employee)));
 };
-const patchSuccess = (state, action) => {
+const reducePatch = (state, action) => {
   const { employee } = action.payload.data;
   let list = state.get("list");
   return state.setIn(["form", "uid"], employee.uid).set(
@@ -76,7 +73,7 @@ const patchSuccess = (state, action) => {
     )
   );
 };
-const delSuccess = (state, action) => {
+const reduceDel = (state, action) => {
   const { employee } = action.payload.data;
   let list = state.get("list");
   return state.setIn(["form", "uid"], employee.uid).set(
@@ -93,12 +90,10 @@ const delSuccess = (state, action) => {
 // reducer
 export default handleActions(
   {
-    [LOAD_EMPLOYEES]: state => {
-      return state.set("loading", true);
-    },
+    [LOAD_EMPLOYEES]: state => state.set("loading", true),
     ...pender({
       type: GET_EMPLOYEES,
-      onSuccess: (state, action) => ApiSuccess(state, action, listSuccess)
+      onSuccess: (state, action) => ApiSuccess(state, action, reduceList)
     }),
     //-------------------------------------------------------------------------
     [LOAD_EMPLOYEE]: (state, action) => {
@@ -117,15 +112,15 @@ export default handleActions(
     },
     ...pender({
       type: ADD_EMPLOYEE,
-      onSuccess: (state, action) => ApiSuccess(state, action, addSuccess)
+      onSuccess: (state, action) => ApiSuccess(state, action, reduceAdd)
     }),
     ...pender({
       type: PATCH_EMPLOYEE,
-      onSuccess: (state, action) => ApiSuccess(state, action, patchSuccess)
+      onSuccess: (state, action) => ApiSuccess(state, action, reducePatch)
     }),
     ...pender({
       type: DEL_EMPLOYEE,
-      onSuccess: (state, action) => ApiSuccess(state, action, delSuccess)
+      onSuccess: (state, action) => ApiSuccess(state, action, reduceDel)
     })
   },
   defaults

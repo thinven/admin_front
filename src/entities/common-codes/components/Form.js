@@ -33,8 +33,8 @@ class Form extends Component {
    * 등록폼 열기/닫기 메소드.
    */
   handleOpen = () => {
-    const { FormActions } = this.props;
-    FormActions.initialize();
+    const { Actions } = this.props;
+    Actions.initForm();
     this.setState({
       open: true
     });
@@ -48,8 +48,8 @@ class Form extends Component {
    * 수정폼 열기 메소드.
    */
   handleOpenEdit = original => {
-    const { FormActions } = this.props;
-    FormActions.loadCommonCode({
+    const { Actions } = this.props;
+    Actions.loadForm({
       info: original
     });
     this.setState({
@@ -62,9 +62,9 @@ class Form extends Component {
    * 사용자 입력 관련 메소드.
    */
   handleLoadOptions = async (inputValue, callback) => {
-    const { GroupListActions } = this.props;
+    const { GroupActions } = this.props;
     try {
-      await GroupListActions.getCommonCodeGroups({ name: inputValue });
+      await GroupActions.getCommonCodeGroups({ name: inputValue });
       callback(
         this.props.groupList.map(group => ({
           value: group.uid,
@@ -76,35 +76,30 @@ class Form extends Component {
     }
   };
   handleAutoCompleteChange = (name, val) => {
-    const { FormActions } = this.props;
-    FormActions.changeInput({
+    const { Actions } = this.props;
+    Actions.changeInput({
       name: name + "n",
       value: val.label ? val.label : ""
     });
-    FormActions.changeInput({
+    Actions.changeInput({
       name: name + "u",
       value: val.value ? val.value : ""
     });
   };
   handleChangeInput = e => {
-    const { FormActions } = this.props;
+    const { Actions } = this.props;
     const { name, value } = e.target;
-    FormActions.changeInput({ name, value });
+    Actions.changeInput({ name, value });
   };
   handleSubmit = async () => {
-    const { form, FormActions, ListActions, handleSendMsg } = this.props;
+    const { form, Actions, handleSendMsg } = this.props;
     try {
       if (form.uid) {
-        await FormActions.patchCommonCode(form);
+        await Actions.patchCommonCode(form);
       } else {
-        await FormActions.addCommonCode(form);
+        await Actions.addCommonCode(form);
       }
       if (this.props.result.key === Result.SUCCESS) {
-        if (form.uid) {
-          ListActions.patchCommonCode(this.props.info);
-        } else {
-          ListActions.addCommonCode(this.props.info);
-        }
         this.handleClose();
       } else {
         handleSendMsg(this.props.result);

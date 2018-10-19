@@ -43,9 +43,9 @@ class List extends Component {
   //===========================================================================
 
   handlePetchData = (state, instance) => {
-    const { ListActions } = this.props;
-    ListActions.startLoading();
-    ListActions.getCommonCodes(
+    const { Actions } = this.props;
+    Actions.loadCommonCodes();
+    Actions.getCommonCodes(
       Object.assign(
         {
           page: state.page + 1, //react-table page가 0부터 시작함

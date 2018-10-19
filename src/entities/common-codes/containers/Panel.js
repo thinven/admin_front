@@ -9,12 +9,8 @@ import { withStyles } from "@material-ui/core/styles";
 import { Header, List, Form } from "../components";
 import { Form as GroupForm } from "entities/common-code-groups/components";
 
-import * as listActions from "../store/list";
-import * as infoActions from "../store/info";
-import * as formActions from "../store/form";
-
-import * as groupListActions from "entities/common-code-groups/store/list";
-import * as groupFormActions from "entities/common-code-groups/store/form";
+import * as actions from "../store/reducer";
+import * as groupActions from "entities/common-code-groups/store/reducer";
 
 const styles = theme => ({
   contentWrap: {
@@ -51,15 +47,13 @@ class Panel extends Component {
       list,
       pages,
       loading,
-      ListActions,
       form,
       info,
-      FormActions,
+      Actions,
       groupList,
-      GroupListActions,
       groupResult,
       groupForm,
-      GroupFormActions,
+      GroupActions,
       useCodes,
       classes,
       handleSendMsg
@@ -73,7 +67,7 @@ class Panel extends Component {
           list={list}
           pages={pages}
           listLoading={loading}
-          ListActions={ListActions}
+          Actions={Actions}
           useCodes={useCodes}
           handleOpenEditForm={handleOpenEditForm}
           handleOpenGroupForm={handleOpenGroupForm}
@@ -83,10 +77,9 @@ class Panel extends Component {
           result={result}
           form={form}
           info={info}
-          FormActions={FormActions}
-          ListActions={ListActions}
+          Actions={Actions}
           groupList={groupList}
-          GroupListActions={GroupListActions}
+          GroupActions={GroupActions}
           useCodes={useCodes}
           handleSendMsg={handleSendMsg}
         />
@@ -94,8 +87,8 @@ class Panel extends Component {
           innerRef={node => (this._groupForm = node)}
           result={groupResult}
           form={groupForm}
-          FormActions={GroupFormActions}
-          CommonCodeListActions={ListActions}
+          Actions={GroupActions}
+          CommonCodeActions={Actions}
           useCodes={useCodes}
         />
       </section>
@@ -106,29 +99,21 @@ class Panel extends Component {
 export default compose(
   withStyles(styles, { name: "Panel" }),
   connect(
-    ({
-      commonCodeList,
-      commonCodeForm,
-      commonCodeGroupList,
-      commonCodeGroupForm
-    }) => ({
-      list: commonCodeList.get("list"),
-      useCodes: commonCodeList.get("useCodes").toJS(),
-      pages: commonCodeList.get("pages"),
-      loading: commonCodeList.get("loading"),
-      form: commonCodeForm.get("form").toJS(),
-      info: commonCodeForm.get("info").toJS(),
-      result: commonCodeForm.get("result").toJS(),
-      groupList: commonCodeGroupList.get("list").toJS(),
-      groupForm: commonCodeGroupForm.get("form").toJS(),
-      groupResult: commonCodeGroupForm.get("result").toJS()
+    ({ commonCodeReducer, commonCodeGroupReducer }) => ({
+      list: commonCodeReducer.get("list"),
+      useCodes: commonCodeReducer.get("useCodes").toJS(),
+      pages: commonCodeReducer.get("pages"),
+      loading: commonCodeReducer.get("loading"),
+      info: commonCodeReducer.get("info").toJS(),
+      form: commonCodeReducer.get("form").toJS(),
+      result: commonCodeReducer.get("result").toJS(),
+      groupList: commonCodeGroupReducer.get("list").toJS(),
+      groupForm: commonCodeGroupReducer.get("form").toJS(),
+      groupResult: commonCodeGroupReducer.get("result").toJS()
     }),
     dispatch => ({
-      ListActions: bindActionCreators(listActions, dispatch),
-      InfoActions: bindActionCreators(infoActions, dispatch),
-      FormActions: bindActionCreators(formActions, dispatch),
-      GroupListActions: bindActionCreators(groupListActions, dispatch),
-      GroupFormActions: bindActionCreators(groupFormActions, dispatch)
+      Actions: bindActionCreators(actions, dispatch),
+      GroupActions: bindActionCreators(groupActions, dispatch)
     })
   )
 )(withRouter(Panel));
