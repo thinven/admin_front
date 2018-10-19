@@ -9,31 +9,28 @@ import defaults from "./defaults";
 import { Json, ApiSuccess } from "support/utils";
 
 // action types
-const INIT_FORM = "employees/INIT_FORM";
-
 const LOAD_EMPLOYEES = "employees/LOAD_EMPLOYEES";
 const GET_EMPLOYEES = "employees/GET_EMPLOYEES";
-
+//-----------------------------------------------------------------------------
 const LOAD_EMPLOYEE = "employees/LOAD_EMPLOYEE";
 const GET_EMPLOYEE = "employees/GET_EMPLOYEE";
-
+//-----------------------------------------------------------------------------
+const INIT_FORM = "employees/INIT_FORM";
 const CHANGE_INPUT = "employees/CHANGE_INPUT";
-
 const ADD_EMPLOYEE = "employees/ADD_EMPLOYEE";
 const PATCH_EMPLOYEE = "employees/PATCH_EMPLOYEE";
 const DEL_EMPLOYEE = "employees/DEL_EMPLOYEE";
 //=============================================================================
 
 // action creators
-export const initForm = createAction(INIT_FORM);
 export const loadEmployees = createAction(LOAD_EMPLOYEES);
 export const getEmployees = createAction(GET_EMPLOYEES, api.getEmployees);
-
+//-----------------------------------------------------------------------------
 export const loadEmployee = createAction(LOAD_EMPLOYEE);
 export const getEmployee = createAction(GET_EMPLOYEE, api.getEmployee);
-
+//-----------------------------------------------------------------------------
+export const initForm = createAction(INIT_FORM);
 export const changeInput = createAction(CHANGE_INPUT);
-
 export const addEmployee = createAction(ADD_EMPLOYEE, api.addEmployee);
 export const patchEmployee = createAction(PATCH_EMPLOYEE, api.patchEmployee);
 export const delEmployee = createAction(DEL_EMPLOYEE, api.delEmployee);
@@ -96,8 +93,6 @@ const delSuccess = (state, action) => {
 // reducer
 export default handleActions(
   {
-    [INIT_FORM]: state => state.set("form", defaults.get("form")),
-    //-------------------------------------------------------------------------
     [LOAD_EMPLOYEES]: state => {
       return state.set("loading", true);
     },
@@ -115,6 +110,7 @@ export default handleActions(
       onSuccess: (state, action) => ApiSuccess(state, action, reduceInfo)
     }),
     //-------------------------------------------------------------------------
+    [INIT_FORM]: state => state.set("form", defaults.get("form")),
     [CHANGE_INPUT]: (state, action) => {
       const { name, value } = action.payload;
       return state.setIn(["form", name], value);

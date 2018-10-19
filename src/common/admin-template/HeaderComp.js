@@ -86,8 +86,8 @@ class Header extends Component {
     this.props.handleLoginForm();
   };
   handleLogout = () => {
-    const { LoginFormActions } = this.props;
-    LoginFormActions.clearEmployeeAuth();
+    const { LoginActions } = this.props;
+    LoginActions.clearEmployeeAuth();
   };
   //===========================================================================
 

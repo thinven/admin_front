@@ -11,7 +11,7 @@ import SideBar from "./SideBarComp";
 
 import { Message, Confirm } from "support/wrapper";
 import { LoginForm } from "entities/employee-auth/components";
-import * as loginFormActions from "entities/employee-auth/store/form";
+import * as loginActions from "entities/employee-auth/store/reducer";
 
 const styles = theme => ({
   root: {
@@ -86,7 +86,7 @@ class AdminTemplate extends Component {
       loginResult,
       loginInfo,
       loginInfoIm,
-      LoginFormActions
+      LoginActions
     } = this.props;
     const { root, content, toolbar } = classes;
     const childrenWithProps = React.Children.map(children, child =>
@@ -102,7 +102,7 @@ class AdminTemplate extends Component {
             handleLoginForm={handleLoginForm}
             loginInfoIm={loginInfoIm}
             loginInfo={loginInfo}
-            LoginFormActions={LoginFormActions}
+            LoginActions={LoginActions}
             drawerOpen={drawerOpen}
             onOpen={handleDrawerOpen}
           />
@@ -119,7 +119,7 @@ class AdminTemplate extends Component {
           form={loginForm}
           result={loginResult}
           info={loginInfo}
-          FormActions={LoginFormActions}
+          Actions={LoginActions}
           handleSendMsg={handleSendMsg}
         />
       </Fragment>
@@ -130,14 +130,14 @@ class AdminTemplate extends Component {
 export default compose(
   withStyles(styles, { name: "AdminTemplate" }),
   connect(
-    ({ employeeAuthForm }) => ({
-      loginForm: employeeAuthForm.get("form").toJS(),
-      loginResult: employeeAuthForm.get("result").toJS(),
-      loginInfo: employeeAuthForm.get("info").toJS(),
-      loginInfoIm: employeeAuthForm.get("info")
+    ({ employeeAuthReducer }) => ({
+      loginForm: employeeAuthReducer.get("form").toJS(),
+      loginResult: employeeAuthReducer.get("result").toJS(),
+      loginInfo: employeeAuthReducer.get("info").toJS(),
+      loginInfoIm: employeeAuthReducer.get("info")
     }),
     dispatch => ({
-      LoginFormActions: bindActionCreators(loginFormActions, dispatch)
+      LoginActions: bindActionCreators(loginActions, dispatch)
     })
   )
 )(withRouter(AdminTemplate));

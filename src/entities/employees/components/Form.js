@@ -63,9 +63,9 @@ class Form extends Component {
    * 사용자 입력 관련 메소드.
    */
   handleLoadOptions = async (inputValue, callback) => {
-    const { RoleListActions } = this.props;
+    const { RoleActions } = this.props;
     try {
-      await RoleListActions.getRoles({ name: inputValue });
+      await RoleActions.getRoles({ name: inputValue });
       callback(
         this.props.roleList.map(role => ({
           value: role.uid,

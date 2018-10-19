@@ -28,21 +28,21 @@ class LoginForm extends Component {
   //===========================================================================
 
   handleOpen = () => {
-    const { FormActions } = this.props;
-    FormActions.initialize();
+    const { Actions } = this.props;
+    Actions.initForm();
     this.setState({
       open: true
     });
   };
   handleChangeInput = e => {
-    const { FormActions } = this.props;
+    const { Actions } = this.props;
     const { name, value } = e.target;
-    FormActions.changeInput({ name, value });
+    Actions.changeInput({ name, value });
   };
   handleSubmit = async () => {
-    const { form, FormActions, handleSendMsg } = this.props;
+    const { form, Actions, handleSendMsg } = this.props;
     try {
-      await FormActions.getEmployeeAuth(form);
+      await Actions.getEmployeeAuth(form);
       if (this.props.result.key === Result.SUCCESS) {
         this.handleClose();
       } else {

@@ -10,7 +10,7 @@ import { Header, List, Form } from "../components";
 
 import * as actions from "../store/reducer";
 
-import * as roleListActions from "entities/roles/store/list";
+import * as roleActions from "entities/roles/store/reducer";
 
 const styles = theme => ({
   contentWrap: {
@@ -69,7 +69,7 @@ class Panel extends Component {
       form,
       Actions,
       roleList,
-      RoleListActions,
+      RoleActions,
       genderCodes,
       classes,
       handleSendMsg
@@ -95,7 +95,7 @@ class Panel extends Component {
           result={result}
           Actions={Actions}
           roleList={roleList}
-          RoleListActions={RoleListActions}
+          RoleActions={RoleActions}
           genderCodes={genderCodes}
           handleSendMsg={handleSendMsg}
         />
@@ -107,18 +107,18 @@ class Panel extends Component {
 export default compose(
   withStyles(styles, { name: "Panel" }),
   connect(
-    ({ employeeReducer, roleList }) => ({
+    ({ employeeReducer, roleReducer }) => ({
       list: employeeReducer.get("list"),
       pages: employeeReducer.get("pages"),
       loading: employeeReducer.get("loading"),
       genderCodes: employeeReducer.get("genderCodes").toJS(),
       form: employeeReducer.get("form").toJS(),
       result: employeeReducer.get("result").toJS(),
-      roleList: roleList.get("list").toJS()
+      roleList: roleReducer.get("list").toJS()
     }),
     dispatch => ({
       Actions: bindActionCreators(actions, dispatch),
-      RoleListActions: bindActionCreators(roleListActions, dispatch)
+      RoleActions: bindActionCreators(roleActions, dispatch)
     })
   )
 )(withRouter(Panel));
