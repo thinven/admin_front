@@ -34,8 +34,8 @@ class Form extends Component {
    * 등록폼 열기/닫기 메소드.
    */
   handleOpen = () => {
-    const { FormActions } = this.props;
-    FormActions.initialize();
+    const { Actions } = this.props;
+    Actions.initForm();
     this.setState({
       open: true
     });
@@ -49,8 +49,8 @@ class Form extends Component {
    * 수정폼 열기 메소드
    */
   handleOpenEdit = original => {
-    const { FormActions } = this.props;
-    FormActions.loadEmployee({
+    const { Actions } = this.props;
+    Actions.loadEmployee({
       info: original
     });
     this.setState({
@@ -77,33 +77,27 @@ class Form extends Component {
     }
   };
   handleAutoCompleteChange = (name, values) => {
-    const { FormActions } = this.props;
+    const { Actions } = this.props;
     const value = values.map(val => ({ label: val.label, value: val.value }));
-    FormActions.changeInput({
+    Actions.changeInput({
       name,
       value
     });
   };
   handleChangeInput = e => {
-    const { FormActions } = this.props;
+    const { Actions } = this.props;
     const { name, value } = e.target;
-    FormActions.changeInput({ name, value });
+    Actions.changeInput({ name, value });
   };
   handleSubmit = async () => {
-    const { form, FormActions, ListActions, handleSendMsg } = this.props;
+    const { form, Actions, handleSendMsg } = this.props;
     try {
-      console.log("submit", form);
       if (form.uid) {
-        await FormActions.patchEmployee(form);
+        await Actions.patchEmployee(form);
       } else {
-        await FormActions.addEmployee(form);
+        await Actions.addEmployee(form);
       }
       if (this.props.result.key === Result.SUCCESS) {
-        if (form.uid) {
-          ListActions.patchEmployee(form);
-        } else {
-          ListActions.addEmployee(form);
-        }
         this.handleClose();
       } else {
         handleSendMsg(this.props.result);

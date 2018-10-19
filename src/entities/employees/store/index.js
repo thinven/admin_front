@@ -1,4 +1,2 @@
-export { default as employeeList } from "./list";
-export { default as employeeForm } from "./form";
-export { default as employeeInfo } from "./info";
+export { default as employeeReducer } from "./reducer";
 export { penderReducer as pender } from "redux-pender";

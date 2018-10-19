@@ -4,6 +4,8 @@ import { Map, List, fromJS } from "immutable";
 import { pender } from "redux-pender";
 import * as api from "./api";
 
+import { Result } from "common/constant";
+
 // action types
 const GET_COMMONCODEGROUPS = "list/GET_COMMONCODEGROUPS";
 
@@ -15,6 +17,10 @@ export const getCommonCodeGroups = createAction(
 
 // initial state
 const initialState = Map({
+  result: Map({
+    key: Result.SUCCESS,
+    desc: ""
+  }),
   list: List(),
   pages: null,
   loading: false
@@ -27,15 +33,21 @@ export default handleActions(
       type: GET_COMMONCODEGROUPS,
       onSuccess: (state, action) => {
         const {
+          key,
+          desc,
           commonCodeGroupList,
           commonCodeGroupPages
         } = action.payload.data;
-        if (commonCodeGroupList)
+        if (key === Result.SUCCESS) {
           return state
             .set("list", fromJS(commonCodeGroupList))
             .set("pages", commonCodeGroupPages)
             .set("loading", false);
-        else return initialState;
+        } else {
+          return state
+            .setIn(["result", "key"], key)
+            .setIn(["result", "desc"], desc);
+        }
       }
     })
   },

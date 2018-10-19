@@ -8,9 +8,7 @@ import { withStyles } from "@material-ui/core/styles";
 
 import { Header, List, Form } from "../components";
 
-import * as listActions from "../store/list";
-import * as formActions from "../store/form";
-import * as infoActions from "../store/info";
+import * as actions from "../store/reducer";
 
 import * as roleListActions from "entities/roles/store/list";
 
@@ -44,8 +42,8 @@ class Panel extends Component {
    * 삭제 관련 이벤트.
    */
   handleDeleteConfirm = original => {
-    const { FormActions, ListActions, handleConfirm } = this.props;
-    FormActions.loadEmployee({
+    const { Actions, handleConfirm } = this.props;
+    Actions.loadEmployee({
       info: original
     });
     handleConfirm({
@@ -53,8 +51,7 @@ class Panel extends Component {
       desc: original.id + "님을 삭제 하시겠습니까?",
       onOk: async () => {
         try {
-          await FormActions.delEmployee(original);
-          ListActions.delEmployee(original);
+          await Actions.delEmployee(original);
         } catch (e) {
           console.log(e);
         }
@@ -69,9 +66,8 @@ class Panel extends Component {
       list,
       pages,
       loading,
-      ListActions,
       form,
-      FormActions,
+      Actions,
       roleList,
       RoleListActions,
       genderCodes,
@@ -88,7 +84,7 @@ class Panel extends Component {
           list={list}
           pages={pages}
           listLoading={loading}
-          ListActions={ListActions}
+          Actions={Actions}
           genderCodes={genderCodes}
           handleOpenEditForm={handleOpenEditForm}
           handleDeleteConfirm={handleDeleteConfirm}
@@ -97,8 +93,7 @@ class Panel extends Component {
           innerRef={node => (this._form = node)}
           form={form}
           result={result}
-          FormActions={FormActions}
-          ListActions={ListActions}
+          Actions={Actions}
           roleList={roleList}
           RoleListActions={RoleListActions}
           genderCodes={genderCodes}
@@ -112,19 +107,17 @@ class Panel extends Component {
 export default compose(
   withStyles(styles, { name: "Panel" }),
   connect(
-    ({ employeeList, employeeForm, roleList }) => ({
-      list: employeeList.get("list"),
-      pages: employeeList.get("pages"),
-      loading: employeeList.get("loading"),
-      genderCodes: employeeList.get("genderCodes").toJS(),
-      form: employeeForm.get("form").toJS(),
-      result: employeeForm.get("result").toJS(),
+    ({ employeeReducer, roleList }) => ({
+      list: employeeReducer.get("list"),
+      pages: employeeReducer.get("pages"),
+      loading: employeeReducer.get("loading"),
+      genderCodes: employeeReducer.get("genderCodes").toJS(),
+      form: employeeReducer.get("form").toJS(),
+      result: employeeReducer.get("result").toJS(),
       roleList: roleList.get("list").toJS()
     }),
     dispatch => ({
-      ListActions: bindActionCreators(listActions, dispatch),
-      InfoActions: bindActionCreators(infoActions, dispatch),
-      FormActions: bindActionCreators(formActions, dispatch),
+      Actions: bindActionCreators(actions, dispatch),
       RoleListActions: bindActionCreators(roleListActions, dispatch)
     })
   )

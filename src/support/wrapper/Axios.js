@@ -17,4 +17,4 @@ export const patch = (url, data) =>
   axios.patch(url, Security.encG(data), config);
 
 export const del = (url, data) =>
-  axios.delete(url, { data: Security.encG(data) }, config);
+  axios.delete(url, { headers: config.headers, data: Security.encG(data) });
