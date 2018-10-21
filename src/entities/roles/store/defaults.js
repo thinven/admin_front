@@ -1,15 +1,13 @@
-import { Map, List } from "immutable";
-
 import { Result } from "common/constant";
 
-const defaults = Map({
-  result: Map({
+const defaults = {
+  result: {
     key: Result.SUCCESS,
     desc: ""
-  }),
-  list: List(),
+  },
+  list: [],
   pages: null,
   loading: false
-});
+};
 
 export default defaults;

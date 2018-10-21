@@ -85,7 +85,6 @@ class AdminTemplate extends Component {
       loginForm,
       loginResult,
       loginInfo,
-      loginInfoIm,
       LoginActions
     } = this.props;
     const { root, content, toolbar } = classes;
@@ -100,7 +99,6 @@ class AdminTemplate extends Component {
         <section className={root}>
           <Header
             handleLoginForm={handleLoginForm}
-            loginInfoIm={loginInfoIm}
             loginInfo={loginInfo}
             LoginActions={LoginActions}
             drawerOpen={drawerOpen}
@@ -131,10 +129,9 @@ export default compose(
   withStyles(styles, { name: "AdminTemplate" }),
   connect(
     ({ employeeAuthReducer }) => ({
-      loginForm: employeeAuthReducer.get("form").toJS(),
-      loginResult: employeeAuthReducer.get("result").toJS(),
-      loginInfo: employeeAuthReducer.get("info").toJS(),
-      loginInfoIm: employeeAuthReducer.get("info")
+      loginForm: employeeAuthReducer.form,
+      loginResult: employeeAuthReducer.result,
+      loginInfo: employeeAuthReducer.info
     }),
     dispatch => ({
       LoginActions: bindActionCreators(loginActions, dispatch)

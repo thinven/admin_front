@@ -1,12 +1,11 @@
 import { createAction, handleActions } from "redux-actions";
 
-import { Map, fromJS } from "immutable";
 import { pender } from "redux-pender";
 
 import * as api from "./api";
 import defaults from "./defaults";
 
-import { ApiSuccess } from "support/utils";
+import { Immer as im } from "support/utils";
 
 // action types
 const GET_COMMONCODEGROUPS = "commonCodeGroups/GET_COMMONCODEGROUPS";
@@ -42,58 +41,49 @@ export const delCommonCodeGroup = createAction(
 );
 //=============================================================================
 
-const reduceList = (state, action) => {
+const reduceList = (draft, action) => {
   const { commonCodeGroupList, commonCodeGroupPages } = action.payload.data;
-  return state
-    .set("list", fromJS(commonCodeGroupList))
-    .set("pages", commonCodeGroupPages)
-    .set("loading", false);
+  Object.assign(draft, {
+    list: commonCodeGroupList,
+    pages: commonCodeGroupPages,
+    loading: false
+  });
 };
 //-----------------------------------------------------------------------------
-const reduceAdd = (state, action) => {
+const reduceAdd = (draft, action) => {
   const { commonCodeGroup } = action.payload.data;
-  return state
-    .setIn(["form", "uid"], commonCodeGroup.uid)
-    .set("info", fromJS(commonCodeGroup));
+  draft.form.uid = commonCodeGroup.uid;
+  draft.info = commonCodeGroup;
 };
-const reducePatch = (state, action) => {
+const reducePatch = (draft, action) => {
   const { commonCodeGroup } = action.payload.data;
-  return state
-    .setIn(["form", "uid"], commonCodeGroup.uid)
-    .set("info", fromJS(commonCodeGroup));
+  draft.form.uid = commonCodeGroup.uid;
+  draft.info = commonCodeGroup;
 };
-const reduceDel = (state, action) => {
+const reduceDel = (draft, action) => {
   const { commonCodeGroup } = action.payload.data;
-  return state
-    .setIn(["form", "uid"], commonCodeGroup.uid)
-    .set("info", fromJS(commonCodeGroup));
+  draft.form.uid = commonCodeGroup.uid;
+  draft.info = commonCodeGroup;
 };
 //=============================================================================
 
 // reducer
 export default handleActions(
   {
-    ...pender({
-      type: GET_COMMONCODEGROUPS,
-      onSuccess: (state, action) => ApiSuccess(state, action, reduceList)
-    }),
+    ...pender(im(GET_COMMONCODEGROUPS, reduceList)),
     //-------------------------------------------------------------------------
-    [INIT_FORM]: state => state.set("form", defaults.get("form")),
-    [LOAD_FORM]: (state, action) => state.set("form", Map(action.payload.info)),
-    [CHANGE_INPUT]: (state, action) =>
-      state.setIn(["form", action.payload.name], action.payload.value),
-    ...pender({
-      type: ADD_COMMONCODEGROUP,
-      onSuccess: (state, action) => ApiSuccess(state, action, reduceAdd)
+    [INIT_FORM]: im(draft => {
+      draft.form = defaults.form;
     }),
-    ...pender({
-      type: PATCH_COMMONCODEGROUP,
-      onSuccess: (state, action) => ApiSuccess(state, action, reducePatch)
+    [LOAD_FORM]: im((draft, action) => {
+      draft.form = action.payload.info;
     }),
-    ...pender({
-      type: DEL_COMMONCODEGROUP,
-      onSuccess: (state, action) => ApiSuccess(state, action, reduceDel)
-    })
+    [CHANGE_INPUT]: im((draft, action) => {
+      draft.form[action.payload.name] = action.payload.value;
+    }),
+    ...pender(im(ADD_COMMONCODEGROUP, reduceAdd)),
+    ...pender(im(PATCH_COMMONCODEGROUP, reducePatch)),
+    ...pender(im(DEL_COMMONCODEGROUP, reduceDel))
   },
   defaults
 );

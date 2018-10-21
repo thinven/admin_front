@@ -1,12 +1,11 @@
 import { createAction, handleActions } from "redux-actions";
 
-import { fromJS } from "immutable";
 import { pender } from "redux-pender";
 
 import * as api from "./api";
 import defaults from "./defaults";
 
-import { ApiSuccess } from "support/utils";
+import { Immer as im } from "support/utils";
 
 // action types
 const INIT_FORM = "employeeAuth/INIT_FORM";
@@ -25,7 +24,7 @@ export const getEmployeeAuth = createAction(
 );
 //=============================================================================
 
-const loginSuccess = (state, action) => {
+const reduceLogin = (draft, action) => {
   const { rk, id, firstname, lastname, pkm2, pke2 } = action.payload.data;
   localStorage.setItem("rk", rk);
   localStorage.setItem("id", id);
@@ -33,18 +32,20 @@ const loginSuccess = (state, action) => {
   localStorage.setItem("lastname", lastname);
   localStorage.setItem("pkm2", pkm2);
   localStorage.setItem("pke2", pke2);
-  return state.set("info", fromJS({ rk, id, firstname, lastname, pkm2, pke2 }));
+  draft.info = { rk, id, firstname, lastname, pkm2, pke2 };
 };
 //=============================================================================
 
 // reducer
 export default handleActions(
   {
-    [INIT_FORM]: state => state.set("form", defaults.get("form")),
-    [CHANGE_INPUT]: (state, action) => {
+    [INIT_FORM]: im(draft => {
+      draft.form = defaults.form;
+    }),
+    [CHANGE_INPUT]: im((draft, action) => {
       const { name, value } = action.payload;
-      return state.setIn(["form", name], value);
-    },
+      draft.form[name] = value;
+    }),
     [CLEAR_EMPLOYEEAUTH]: () => {
       localStorage.setItem("rk", "");
       localStorage.setItem("id", "");
@@ -54,10 +55,7 @@ export default handleActions(
       localStorage.setItem("pke2", "");
       return defaults;
     },
-    ...pender({
-      type: GET_EMPLOYEEAUTH,
-      onSuccess: (state, action) => ApiSuccess(state, action, loginSuccess)
-    })
+    ...pender(im(GET_EMPLOYEEAUTH, reduceLogin))
   },
   defaults
 );

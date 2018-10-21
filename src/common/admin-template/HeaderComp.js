@@ -64,7 +64,7 @@ class Header extends Component {
   //===========================================================================
 
   shouldComponentUpdate(nextProps, nextState) {
-    if (this.props.loginInfoIm !== nextProps.loginInfoIm) return true;
+    if (this.props.loginInfo !== nextProps.loginInfo) return true;
     if (this.state.profileOpen !== nextState.profileOpen) return true;
     return false;
   }

@@ -76,7 +76,6 @@ class Panel extends Component {
     } = this.props;
     const { contentWrap } = classes;
     const { handleOpenForm, handleOpenEditForm, handleDeleteConfirm } = this;
-
     return (
       <section className={contentWrap}>
         <Header handleOpenForm={handleOpenForm} />
@@ -108,13 +107,13 @@ export default compose(
   withStyles(styles, { name: "Panel" }),
   connect(
     ({ employeeReducer, roleReducer }) => ({
-      list: employeeReducer.get("list"),
-      pages: employeeReducer.get("pages"),
-      loading: employeeReducer.get("loading"),
-      genderCodes: employeeReducer.get("genderCodes").toJS(),
-      form: employeeReducer.get("form").toJS(),
-      result: employeeReducer.get("result").toJS(),
-      roleList: roleReducer.get("list").toJS()
+      list: employeeReducer.list,
+      pages: employeeReducer.pages,
+      loading: employeeReducer.loading,
+      genderCodes: employeeReducer.genderCodes,
+      form: employeeReducer.form,
+      result: employeeReducer.result,
+      roleList: roleReducer.list
     }),
     dispatch => ({
       Actions: bindActionCreators(actions, dispatch),

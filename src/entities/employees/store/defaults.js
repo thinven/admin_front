@@ -1,14 +1,12 @@
-import { Map, List } from "immutable";
-
 import { Result } from "common/constant";
 
-const defaults = Map({
-  list: List(),
-  genderCodes: List(),
-  pages: null,
+const defaults = {
+  list: [],
+  genderCodes: [],
+  pages: [],
   loading: false,
-  info: Map({}),
-  form: Map({
+  info: {},
+  form: {
     uid: "",
     firstname: "",
     lastname: "",
@@ -18,11 +16,11 @@ const defaults = Map({
     email: "",
     id: "",
     rolejson: ""
-  }),
-  result: Map({
+  },
+  result: {
     key: Result.SUCCESS,
     desc: ""
-  })
-});
+  }
+};
 
 export default defaults;

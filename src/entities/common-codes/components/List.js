@@ -142,7 +142,7 @@ class List extends Component {
         <Table
           ref={ref => (this._table = ref)}
           columns={columns(useCodes)}
-          data={list.toJS()}
+          data={list}
           pages={pages}
           loading={listLoading}
           onFetchData={handlePetchData}

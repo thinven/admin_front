@@ -153,7 +153,7 @@ class List extends Component {
       <div className={listWrap}>
         <Table
           columns={columns}
-          data={list.toJS()}
+          data={list}
           pages={pages}
           loading={listLoading}
           onFetchData={handlePetchData}

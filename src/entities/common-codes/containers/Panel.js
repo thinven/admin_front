@@ -100,16 +100,16 @@ export default compose(
   withStyles(styles, { name: "Panel" }),
   connect(
     ({ commonCodeReducer, commonCodeGroupReducer }) => ({
-      list: commonCodeReducer.get("list"),
-      useCodes: commonCodeReducer.get("useCodes").toJS(),
-      pages: commonCodeReducer.get("pages"),
-      loading: commonCodeReducer.get("loading"),
-      info: commonCodeReducer.get("info").toJS(),
-      form: commonCodeReducer.get("form").toJS(),
-      result: commonCodeReducer.get("result").toJS(),
-      groupList: commonCodeGroupReducer.get("list").toJS(),
-      groupForm: commonCodeGroupReducer.get("form").toJS(),
-      groupResult: commonCodeGroupReducer.get("result").toJS()
+      list: commonCodeReducer.list,
+      useCodes: commonCodeReducer.useCodes,
+      pages: commonCodeReducer.pages,
+      loading: commonCodeReducer.loading,
+      info: commonCodeReducer.info,
+      form: commonCodeReducer.form,
+      result: commonCodeReducer.result,
+      groupList: commonCodeGroupReducer.list,
+      groupForm: commonCodeGroupReducer.form,
+      groupResult: commonCodeGroupReducer.result
     }),
     dispatch => ({
       Actions: bindActionCreators(actions, dispatch),
