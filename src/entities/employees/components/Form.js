@@ -50,7 +50,7 @@ class Form extends Component {
    */
   handleOpenEdit = original => {
     const { Actions } = this.props;
-    Actions.loadEmployee({
+    Actions.loadForm({
       info: original
     });
     this.setState({

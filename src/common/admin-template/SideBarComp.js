@@ -14,6 +14,7 @@ import classNames from "classnames";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import GroupAddIcon from "@material-ui/icons/GroupAdd";
 import BallotIcon from "@material-ui/icons/Ballot";
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
@@ -97,6 +98,12 @@ class SideBar extends Component {
               <BallotIcon />
             </ListItemIcon>
             <ListItemText primary="공통코드" />
+          </ListItem>
+          <ListItem button onClick={() => this.nextPath("/uploadFiles")}>
+            <ListItemIcon>
+              <CloudUploadIcon />
+            </ListItemIcon>
+            <ListItemText primary="마이홈 소스관리" />
           </ListItem>
         </List>
       </Drawer>
