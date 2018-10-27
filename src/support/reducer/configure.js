@@ -6,6 +6,7 @@ import * as commonCodes from "entities/common-codes/store";
 import * as roles from "entities/roles/store";
 import * as employees from "entities/employees/store";
 import * as employeeAuth from "entities/employee-auth/store";
+import * as deployment from "entities/deployment/store";
 
 const allReducers = Object.assign(
   {},
@@ -13,7 +14,8 @@ const allReducers = Object.assign(
   commonCodes,
   roles,
   employees,
-  employeeAuth
+  employeeAuth,
+  deployment
 );
 
 const reducers = combineReducers(allReducers);

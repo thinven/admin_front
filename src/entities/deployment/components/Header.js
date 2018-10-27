@@ -3,7 +3,6 @@ import React, { Component, Fragment } from "react";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import Divider from "@material-ui/core/Divider";
-
 import { withStyles } from "@material-ui/core/styles";
 import AddBoxOutlinedIcon from "@material-ui/icons/AddBoxOutlined";
 
@@ -36,9 +35,9 @@ class Header extends Component {
             </IconButton>
           </div>
           <Typography variant="display1" gutterBottom>
-            마이홈 소스관리
+            마이홈 배포관리
           </Typography>
-          <Typography gutterBottom>마이홈 소스파일을 관리합니다.</Typography>
+          <Typography gutterBottom>마이홈 배포파일을 관리합니다.</Typography>
           <Divider />
         </section>
       </Fragment>

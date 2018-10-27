@@ -5,6 +5,7 @@ const defaults = {
     key: Result.SUCCESS,
     desc: ""
   },
+  fileList: [],
   list: [],
   pages: [],
   loading: false

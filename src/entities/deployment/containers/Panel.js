@@ -1,16 +1,23 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import { withRouter } from "react-router-dom";
 import compose from "recompose/compose";
 
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
 
-import { Header, Tree, List, Form } from "../components";
+import { Header, FileTree, List, UploadForm } from "../components";
+
+import * as actions from "../store/reducer";
 
 const styles = theme => ({
   contentWrap: {
     padding: theme.spacing.unit,
     backgroundColor: "#f9f9f9"
+  },
+  treeWrap: {
+    overflow: "hidden"
   }
 });
 
@@ -20,8 +27,8 @@ class Panel extends Component {
   /**
    * 신규등록폼 관련 이벤트.
    */
-  handleOpenForm = () => {
-    this._form.handleOpen();
+  handleOpenUplaodForm = () => {
+    this._uploadForm.handleOpen();
   };
   //===========================================================================
 
@@ -56,27 +63,38 @@ class Panel extends Component {
   //===========================================================================
 
   render() {
-    const { classes } = this.props;
-    const { contentWrap } = classes;
-    const { handleOpenForm } = this;
-
+    const { classes, fileList, Actions } = this.props;
+    const { contentWrap, treeWrap } = classes;
+    const { handleOpenUplaodForm } = this;
     return (
       <section className={contentWrap}>
-        <Header handleOpenForm={handleOpenForm} />
+        <Header handleOpenForm={handleOpenUplaodForm} />
         <Grid container>
-          <Grid item container xs={3}>
-            <Tree />
+          <Grid item container xs={3} className={treeWrap}>
+            <FileTree
+              fileList={fileList}
+              Actions={Actions}
+              handleOpenUploadForm={handleOpenUplaodForm}
+            />
           </Grid>
           <Grid item container xs={9}>
             <List />
           </Grid>
         </Grid>
-        <Form />
+        <UploadForm innerRef={node => (this._uploadForm = node)} />
       </section>
     );
   }
 }
 
-export default compose(withStyles(styles, { name: "Panel" }))(
-  withRouter(Panel)
-);
+export default compose(
+  withStyles(styles, { name: "Panel" }),
+  connect(
+    ({ deploymentReducer }) => ({
+      fileList: deploymentReducer.fileList
+    }),
+    dispatch => ({
+      Actions: bindActionCreators(actions, dispatch)
+    })
+  )
+)(withRouter(Panel));

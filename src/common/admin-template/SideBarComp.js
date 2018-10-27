@@ -99,7 +99,7 @@ class SideBar extends Component {
             </ListItemIcon>
             <ListItemText primary="공통코드" />
           </ListItem>
-          <ListItem button onClick={() => this.nextPath("/uploadFiles")}>
+          <ListItem button onClick={() => this.nextPath("/admin/deployment")}>
             <ListItemIcon>
               <CloudUploadIcon />
             </ListItemIcon>

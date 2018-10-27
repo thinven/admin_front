@@ -9,7 +9,6 @@ import { withStyles } from "@material-ui/core/styles";
 import { Header, List, Form } from "../components";
 
 import * as actions from "../store/reducer";
-
 import * as roleActions from "entities/roles/store/reducer";
 
 const styles = theme => ({

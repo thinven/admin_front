@@ -5,7 +5,7 @@ import { NotFoundPage } from "common/pages";
 import { DashBoardPanel } from "entities/dashboard";
 import { EmployeesPanel } from "entities/employees";
 import { CommonCodesPanel } from "entities/common-codes";
-import { UploadFilesPanel } from "entities/upload-files";
+import { DeploymentPanel } from "entities/deployment";
 
 const App = () => {
   return (
@@ -14,7 +14,7 @@ const App = () => {
         <Route exact path="/" component={DashBoardPanel} />
         <Route exact path="/admin/employees/" component={EmployeesPanel} />
         <Route exact path="/admin/commonCodes/" component={CommonCodesPanel} />
-        <Route exact path="/uploadFiles/" component={UploadFilesPanel} />
+        <Route exact path="/admin/deployment/" component={DeploymentPanel} />
         <Route component={NotFoundPage} />
       </Switch>
     </Fragment>

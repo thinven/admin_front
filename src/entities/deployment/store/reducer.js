@@ -8,19 +8,18 @@ import defaults from "./defaults";
 import { Immer as im } from "support/utils";
 
 // action types
-const GET_ROLES = "roles/GET_ROLES";
+const GET_DEPLOYMENT = "deployment/GET_FILEMANAGER";
 //=============================================================================
 
 // action creators
-export const getRoles = createAction(GET_ROLES, api.getRoles);
+export const getDeployment = createAction(GET_DEPLOYMENT, api.getDeployment);
 //=============================================================================
 
 // reducer define
-const reduceList = (draft, action) => {
-  const { roleList, rolePages } = action.payload.data;
+const reduceInfo = (draft, action) => {
+  const { fileList } = action.payload.data;
   Object.assign(draft, {
-    list: roleList,
-    pages: rolePages,
+    fileList: fileList,
     loading: false
   });
 };
@@ -29,7 +28,7 @@ const reduceList = (draft, action) => {
 // reducer
 export default handleActions(
   {
-    ...pender(im(GET_ROLES, reduceList))
+    ...pender(im(GET_DEPLOYMENT, reduceInfo))
   },
   defaults
 );
