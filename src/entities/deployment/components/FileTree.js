@@ -28,7 +28,11 @@ class FileTree extends Component {
     const { handleOpenUploadForm } = this.props;
     handleOpenUploadForm();
   };
-  handleNewFolderForm = () => {};
+  handleNewFolderForm = () => {
+    const { handleOpenNewFolderForm } = this.props;
+    let tmp = this._tree.handleSelectInfo();
+    handleOpenNewFolderForm(tmp[0] ? tmp[0] + "/" : "/");
+  };
   handleReload = async () => {
     const { Actions } = this.props;
     await Actions.getDeployment({});
@@ -54,7 +58,7 @@ class FileTree extends Component {
             <CachedIcon />
           </IconButton>
         </Tooltip>
-        <TreeView data={this.props.fileList} />
+        <TreeView ref={ref => (this._tree = ref)} data={this.props.fileList} />
       </Fragment>
     );
   }

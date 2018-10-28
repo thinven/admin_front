@@ -7,7 +7,13 @@ import compose from "recompose/compose";
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
 
-import { Header, FileTree, List, UploadForm } from "../components";
+import {
+  Header,
+  FileTree,
+  List,
+  UploadForm,
+  NewFolderForm
+} from "../components";
 
 import * as actions from "../store/reducer";
 
@@ -35,8 +41,8 @@ class Panel extends Component {
   /**
    * 수정폼 관련 이벤트.
    */
-  handleOpenEditForm = original => {
-    this._form.handleOpenEdit(original);
+  handleOpenNewFolderForm = path => {
+    this._newFolderForm.handleOpen(path);
   };
   //===========================================================================
 
@@ -63,9 +69,16 @@ class Panel extends Component {
   //===========================================================================
 
   render() {
-    const { classes, fileList, result, Actions, handleSendMsg } = this.props;
+    const { handleOpenUplaodForm, handleOpenNewFolderForm } = this;
+    const {
+      classes,
+      fileList,
+      form,
+      result,
+      Actions,
+      handleSendMsg
+    } = this.props;
     const { contentWrap, treeWrap } = classes;
-    const { handleOpenUplaodForm } = this;
     return (
       <section className={contentWrap}>
         <Header handleOpenForm={handleOpenUplaodForm} />
@@ -75,6 +88,7 @@ class Panel extends Component {
               fileList={fileList}
               Actions={Actions}
               handleOpenUploadForm={handleOpenUplaodForm}
+              handleOpenNewFolderForm={handleOpenNewFolderForm}
             />
           </Grid>
           <Grid item container xs={9}>
@@ -83,6 +97,13 @@ class Panel extends Component {
         </Grid>
         <UploadForm
           innerRef={node => (this._uploadForm = node)}
+          result={result}
+          Actions={Actions}
+          handleSendMsg={handleSendMsg}
+        />
+        <NewFolderForm
+          innerRef={node => (this._newFolderForm = node)}
+          form={form}
           result={result}
           Actions={Actions}
           handleSendMsg={handleSendMsg}
@@ -97,7 +118,8 @@ export default compose(
   connect(
     ({ deploymentReducer }) => ({
       result: deploymentReducer.result,
-      fileList: deploymentReducer.fileList
+      fileList: deploymentReducer.fileList,
+      form: deploymentReducer.form
     }),
     dispatch => ({
       Actions: bindActionCreators(actions, dispatch)

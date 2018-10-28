@@ -6,8 +6,9 @@ const defaults = {
     desc: ""
   },
   fileList: [],
-  list: [],
-  pages: [],
+  form: {
+    folderName: ""
+  },
   loading: false
 };
 

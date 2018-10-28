@@ -5,14 +5,24 @@ import 'rc-tree/assets/index.css';
 
 
 class TreeView extends Component {
+  state = {
+    selected:[]
+  }
+  //===========================================================================
   onExpand = (expandedKeys) => {
     console.log('onExpand', expandedKeys, arguments);
   };
   onSelect = (info) => {
-    console.log('selected', info);
+    this.setState({
+      selected: info
+    });
+    console.log('right click', info);
   }
   onRightClick = (info) => {
     console.log('right click', info.node.props);
+  }
+  handleSelectInfo = () => {
+    return this.state.selected;
   }
   //===========================================================================
 
