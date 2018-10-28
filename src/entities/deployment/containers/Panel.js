@@ -63,7 +63,7 @@ class Panel extends Component {
   //===========================================================================
 
   render() {
-    const { classes, fileList, Actions } = this.props;
+    const { classes, fileList, result, Actions, handleSendMsg } = this.props;
     const { contentWrap, treeWrap } = classes;
     const { handleOpenUplaodForm } = this;
     return (
@@ -81,7 +81,12 @@ class Panel extends Component {
             <List />
           </Grid>
         </Grid>
-        <UploadForm innerRef={node => (this._uploadForm = node)} />
+        <UploadForm
+          innerRef={node => (this._uploadForm = node)}
+          result={result}
+          Actions={Actions}
+          handleSendMsg={handleSendMsg}
+        />
       </section>
     );
   }
@@ -91,6 +96,7 @@ export default compose(
   withStyles(styles, { name: "Panel" }),
   connect(
     ({ deploymentReducer }) => ({
+      result: deploymentReducer.result,
       fileList: deploymentReducer.fileList
     }),
     dispatch => ({

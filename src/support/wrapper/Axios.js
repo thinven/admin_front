@@ -19,3 +19,12 @@ export const patch = (url, data) =>
 
 export const del = (url, data) =>
   axios.delete(url, { headers: config().headers, data: Security.encG(data) });
+
+export const upload = (url, data, files) =>
+  axios.post(url, Security.encU(data, files), {
+    headers: {
+      "x-auth-token": localStorage.getItem("rk"),
+      "Content-Type": "multipart/form-data",
+      "X-Requested-With": "XMLHttpRequest"
+    }
+  });

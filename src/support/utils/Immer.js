@@ -18,8 +18,15 @@ const reducer = {
         if (key === Result.SUCCESS) {
           reduce(draft, action, () => {});
         }
-        draft.key = key;
-        draft.desc = desc;
+        draft.result.key = key;
+        draft.result.desc = desc;
+      });
+    },
+    onFailure: (state, action) => {
+      const { key, desc } = action.payload.response.data;
+      return produce(state, draft => {
+        draft.result.key = key;
+        draft.result.desc = desc;
       });
     }
   })

@@ -66,6 +66,11 @@ const Security = {
     //console.log("data", data);
     //console.log("bodyFormData", bodyFormData);
     return data ? bodyFormData : data;
+  },
+  encU: function(data, files) {
+    let bodyFormData = this.encP(data);
+    for (let idx in files) bodyFormData.append("files", files[idx]);
+    return data ? bodyFormData : data;
   }
 };
 

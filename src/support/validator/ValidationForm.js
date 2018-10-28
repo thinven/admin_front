@@ -5,10 +5,7 @@ import { ValidatorProvider } from "./Provider";
 class ValidationForm extends Component {
   handleSubmit = event => {
     event.preventDefault();
-    if (this._validator.validate()) {
-      const { onSubmit } = this.props;
-      onSubmit();
-    }
+    if (this._validator.validate()) this.props.onSubmit();
   };
   //===========================================================================
   render() {

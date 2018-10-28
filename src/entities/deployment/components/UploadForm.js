@@ -8,15 +8,11 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import Grid from "@material-ui/core/Grid";
 
-import Dropzone from "react-dropzone";
-import filesize from "filesize";
-
+import { Result } from "common/constant";
 import { ValidationForm } from "support/validator";
+import { DropZone } from "support/wrapper";
 
 const styles = theme => ({
-  gridWrap: {
-    padding: theme.spacing.unit
-  },
   buttonWrap: {
     marginTop: theme.spacing.unit
   },
@@ -27,8 +23,7 @@ const styles = theme => ({
 
 class UploadForm extends Component {
   state = {
-    open: false,
-    files: []
+    open: false
   };
   //===========================================================================
 
@@ -45,26 +40,27 @@ class UploadForm extends Component {
   };
   //===========================================================================
 
-  handleDrop = files => {
-    this.setState({
-      files
-    });
+  handleSubmit = async () => {
+    const { Actions, handleSendMsg } = this.props;
+    if (this._dropZone.handleGetFiles().length > 0)
+      try {
+        await Actions.uploadDeployment({}, this._dropZone.handleGetFiles());
+        if (this.props.result.key === Result.SUCCESS) {
+          this.handleClose();
+        } else {
+          handleSendMsg(this.props.result);
+        }
+      } catch (e) {
+        handleSendMsg(this.props.result);
+      }
+    else handleSendMsg({ desc: "업로드할 파일은 선택해 주세요." });
   };
-
-  handleCancel = () => {
-    this.setState({
-      files: []
-    });
-  };
-  //===========================================================================
-
-  handleSubmit = () => {};
   //===========================================================================
 
   render() {
-    const { handleClose, handleDrop, handleCancel, handleSubmit } = this;
+    const { handleClose, handleSubmit } = this;
     const { classes } = this.props;
-    const { gridWrap, buttonWrap, button } = classes;
+    const { buttonWrap, button } = classes;
     return (
       <Dialog
         onClose={handleClose}
@@ -74,27 +70,11 @@ class UploadForm extends Component {
         <DialogTitle id="simple-dialog-title">파일 업로드</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            사각형 박스에 파일들을 드래그&드롭 하거나 클릭해서 선택하세요.
+            사각형 박스에 파일들을 드래그&드롭 하거나 클릭해서
+            선택하세요.(용량제한 : 1mb)
           </DialogContentText>
           <ValidationForm onSubmit={handleSubmit}>
-            <Grid container>
-              <Grid item container xs={4} className={gridWrap}>
-                <Dropzone
-                  onDrop={handleDrop}
-                  onFileDialogCancel={handleCancel}
-                />
-              </Grid>
-              <Grid item container xs={8} className={gridWrap}>
-                <h2>업로드 파일목록</h2>
-                <ul>
-                  {this.state.files.map(f => (
-                    <li key={f.name}>
-                      {f.name} - {filesize(f.size)}
-                    </li>
-                  ))}
-                </ul>
-              </Grid>
-            </Grid>
+            <DropZone innerRef={node => (this._dropZone = node)} />
             <Grid container className={buttonWrap}>
               <Grid item container xs={12} justify="center">
                 <Button

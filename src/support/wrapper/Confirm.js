@@ -13,6 +13,8 @@ class Confirm extends Component {
     title: "알림",
     desc: ""
   };
+  //===========================================================================
+
   handleOpen = ({ title, desc, onOk }) => {
     this.setState({ open: true, title: title, desc: desc });
     this.onOk = onOk;
@@ -26,6 +28,8 @@ class Confirm extends Component {
     if (this.onOk) this.onOk();
     this.handleClose();
   };
+  //===========================================================================
+
   render() {
     const { title, desc } = this.state;
     return (

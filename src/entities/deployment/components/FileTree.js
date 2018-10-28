@@ -4,6 +4,8 @@ import { withStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import CreateNewFolderIcon from "@material-ui/icons/CreateNewFolder";
+import CachedIcon from "@material-ui/icons/Cached";
+import Tooltip from "@material-ui/core/Tooltip";
 
 import { TreeView } from "support/wrapper";
 
@@ -17,9 +19,8 @@ const styles = theme => ({
 });
 
 class FileTree extends Component {
-  componentDidMount = async () => {
-    const { Actions } = this.props;
-    await Actions.getDeployment({});
+  componentDidMount = () => {
+    this.handleReload();
   };
   //===========================================================================
 
@@ -28,18 +29,31 @@ class FileTree extends Component {
     handleOpenUploadForm();
   };
   handleNewFolderForm = () => {};
+  handleReload = async () => {
+    const { Actions } = this.props;
+    await Actions.getDeployment({});
+  };
   //===========================================================================
 
   render() {
-    const { handleUploadForm, handleNewFolderForm } = this;
+    const { handleUploadForm, handleNewFolderForm, handleReload } = this;
     return (
       <Fragment>
-        <IconButton onClick={handleUploadForm}>
-          <CloudUploadIcon />
-        </IconButton>
-        <IconButton onClick={handleNewFolderForm}>
-          <CreateNewFolderIcon />
-        </IconButton>{" "}
+        <Tooltip title="파일 업로드폼">
+          <IconButton onClick={handleUploadForm}>
+            <CloudUploadIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="폴더 생성폼">
+          <IconButton onClick={handleNewFolderForm}>
+            <CreateNewFolderIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="트리정보 새로고침">
+          <IconButton onClick={handleReload}>
+            <CachedIcon />
+          </IconButton>
+        </Tooltip>
         <TreeView data={this.props.fileList} />
       </Fragment>
     );

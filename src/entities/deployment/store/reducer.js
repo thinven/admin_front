@@ -9,10 +9,15 @@ import { Immer as im } from "support/utils";
 
 // action types
 const GET_DEPLOYMENT = "deployment/GET_FILEMANAGER";
+const UPLOAD_DEPLOYMENT = "deployment/UPLOAD_DEPLOYMENT";
 //=============================================================================
 
 // action creators
 export const getDeployment = createAction(GET_DEPLOYMENT, api.getDeployment);
+export const uploadDeployment = createAction(
+  UPLOAD_DEPLOYMENT,
+  api.uploadDeployment
+);
 //=============================================================================
 
 // reducer define
@@ -23,12 +28,14 @@ const reduceInfo = (draft, action) => {
     loading: false
   });
 };
+const reduceUpload = () => {};
 //=============================================================================
 
 // reducer
 export default handleActions(
   {
-    ...pender(im(GET_DEPLOYMENT, reduceInfo))
+    ...pender(im(GET_DEPLOYMENT, reduceInfo)),
+    ...pender(im(UPLOAD_DEPLOYMENT, reduceUpload))
   },
   defaults
 );
