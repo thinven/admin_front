@@ -7,6 +7,7 @@ const defaults = {
   },
   fileList: [],
   form: {
+    parentPath: "",
     folderName: ""
   },
   loading: false

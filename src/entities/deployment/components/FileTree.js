@@ -29,9 +29,13 @@ class FileTree extends Component {
     handleOpenUploadForm();
   };
   handleNewFolderForm = () => {
-    const { handleOpenNewFolderForm } = this.props;
+    const { Actions, handleOpenNewFolderForm } = this.props;
     let tmp = this._tree.handleSelectInfo();
-    handleOpenNewFolderForm(tmp[0] ? tmp[0] + "/" : "/");
+    Actions.changeInput({
+      name: "parentPath",
+      value: tmp[0] ? tmp[0] + "/" : "/"
+    });
+    handleOpenNewFolderForm();
   };
   handleReload = async () => {
     const { Actions } = this.props;

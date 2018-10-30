@@ -1,29 +1,27 @@
 import React, { Component } from "react";
 
 import Tree from "rc-tree";
-import 'rc-tree/assets/index.css';
-
+import "rc-tree/assets/index.css";
 
 class TreeView extends Component {
   state = {
-    selected:[]
-  }
-  //===========================================================================
-  onExpand = (expandedKeys) => {
-    console.log('onExpand', expandedKeys, arguments);
+    selected: []
   };
-  onSelect = (info) => {
+  //===========================================================================
+  onExpand = expandedKeys => {
+    //console.log('onExpand', expandedKeys, arguments);
+  };
+  onSelect = info => {
     this.setState({
       selected: info
     });
-    console.log('right click', info);
-  }
-  onRightClick = (info) => {
-    console.log('right click', info.node.props);
-  }
+  };
+  onRightClick = info => {
+    //console.log('right click', info.node.props);
+  };
   handleSelectInfo = () => {
     return this.state.selected;
-  }
+  };
   //===========================================================================
 
   render() {

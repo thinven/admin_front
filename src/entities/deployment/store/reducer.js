@@ -23,7 +23,7 @@ export const uploadDeployment = createAction(
 export const changeInput = createAction(CHANGE_INPUT);
 export const newFolderDeployment = createAction(
   NEWFOLDER_DEPLOYMENT,
-  api.addDeployment
+  api.newFolderDeployment
 );
 //=============================================================================
 

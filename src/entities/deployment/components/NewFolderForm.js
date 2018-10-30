@@ -24,18 +24,16 @@ const styles = theme => ({
 
 class NewFolderForm extends Component {
   state = {
-    open: false,
-    folderPath: "/"
+    open: false
   };
   //===========================================================================
 
   /**
    * 업로드폼 열기/닫기 메소드.
    */
-  handleOpen = folderPath => {
+  handleOpen = () => {
     this.setState({
-      open: true,
-      folderPath
+      open: true
     });
   };
   handleClose = () => {
@@ -65,7 +63,6 @@ class NewFolderForm extends Component {
 
   render() {
     const { handleClose, handleChangeInput, handleSubmit } = this;
-    const { folderPath } = this.state;
     const { classes, form } = this.props;
     const { buttonWrap, button } = classes;
     return (
@@ -92,7 +89,7 @@ class NewFolderForm extends Component {
                   InputProps={{
                     startAdornment: (
                       <InputAdornment variant="filled" position="start">
-                        {folderPath}
+                        {form.parentPath}
                       </InputAdornment>
                     )
                   }}

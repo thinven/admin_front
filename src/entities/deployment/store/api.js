@@ -11,3 +11,6 @@ export const delDeployment = deployment => del("/deployment", deployment);
 
 export const uploadDeployment = (deployment, files) =>
   upload("/deployment/upload", deployment, files);
+
+export const newFolderDeployment = deployment =>
+  post("/deployment", deployment);
