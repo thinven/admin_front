@@ -25,17 +25,24 @@ class FileTree extends Component {
   //===========================================================================
 
   handleUploadForm = () => {
-    const { handleOpenUploadForm } = this.props;
-    handleOpenUploadForm();
+    this.handleChangeInput();
+    this.props.handleOpenUploadForm();
   };
   handleNewFolderForm = () => {
-    const { Actions, handleOpenNewFolderForm } = this.props;
+    this.handleChangeInput();
+    this.props.handleOpenNewFolderForm();
+  };
+  handleDeleteForm = () => {
+    this.handleChangeInput();
+    this.props.handleOpenDeleteForm();
+  };
+  handleChangeInput = () => {
+    const { Actions } = this.props;
     let tmp = this._tree.handleSelectInfo();
     Actions.changeInput({
       name: "parentPath",
-      value: tmp[0] ? tmp[0] + "/" : "/"
+      value: tmp.key && !tmp.leaf ? tmp.key + "/" : "/"
     });
-    handleOpenNewFolderForm();
   };
   handleReload = async () => {
     const { Actions } = this.props;
@@ -43,8 +50,27 @@ class FileTree extends Component {
   };
   //===========================================================================
 
+  handleDelete = selected => {
+    this.handleDeleteForm();
+    const { Actions } = this.props;
+    Actions.changeInput({
+      name: "selected",
+      value: selected
+    });
+    /*
+    const { Actions } = this.props;
+    Actions.delDeployment(this.props.form);
+    */
+  };
+  //===========================================================================
+
   render() {
-    const { handleUploadForm, handleNewFolderForm, handleReload } = this;
+    const {
+      handleUploadForm,
+      handleNewFolderForm,
+      handleReload,
+      handleDelete
+    } = this;
     return (
       <Fragment>
         <Tooltip title="파일 업로드폼">
@@ -62,7 +88,11 @@ class FileTree extends Component {
             <CachedIcon />
           </IconButton>
         </Tooltip>
-        <TreeView ref={ref => (this._tree = ref)} data={this.props.fileList} />
+        <TreeView
+          ref={ref => (this._tree = ref)}
+          data={this.props.fileList}
+          handleDelete={handleDelete}
+        />
       </Fragment>
     );
   }

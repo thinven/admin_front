@@ -7,11 +7,9 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import Grid from "@material-ui/core/Grid";
-import InputAdornment from "@material-ui/core/InputAdornment";
 
 import { Result } from "common/constant";
 import { ValidationForm } from "support/validator";
-import { Input } from "support/wrapper";
 
 const styles = theme => ({
   buttonWrap: {
@@ -22,7 +20,7 @@ const styles = theme => ({
   }
 });
 
-class NewFolderForm extends Component {
+class DeleteForm extends Component {
   state = {
     open: false
   };
@@ -41,15 +39,10 @@ class NewFolderForm extends Component {
   };
   //===========================================================================
 
-  handleChangeInput = e => {
-    const { Actions } = this.props;
-    const { name, value } = e.target;
-    Actions.changeInput({ name, value });
-  };
   handleSubmit = async () => {
     const { form, Actions, handleSendMsg, handleReloadTree } = this.props;
     try {
-      await Actions.newFolderDeployment(form);
+      await Actions.delDeployment(form);
       if (this.props.result.key === Result.SUCCESS) {
         handleReloadTree();
         this.handleClose();
@@ -63,7 +56,7 @@ class NewFolderForm extends Component {
   //===========================================================================
 
   render() {
-    const { handleClose, handleChangeInput, handleSubmit } = this;
+    const { handleClose, handleSubmit } = this;
     const { classes, form } = this.props;
     const { buttonWrap, button } = classes;
     return (
@@ -72,32 +65,20 @@ class NewFolderForm extends Component {
         aria-labelledby="simple-dialog-title"
         open={this.state.open}
       >
-        <DialogTitle id="simple-dialog-title">폴더 생성</DialogTitle>
+        <DialogTitle id="simple-dialog-title">
+          {form.selected.leaf ? "파일" : "폴더"} 삭제
+        </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            생성할 폴더명을 입력한 후 저장하세요.
+            선택한 {form.selected.leaf ? "파일을" : "폴더를"} 삭제하시겠습니까?
           </DialogContentText>
           <ValidationForm onSubmit={handleSubmit}>
-            <Grid container>
-              <Grid item container>
-                <Input
-                  required
-                  maxLength={20}
-                  name="folderName"
-                  label="폴더명"
-                  value={form.folderName}
-                  onChangeInput={handleChangeInput}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment variant="filled" position="start">
-                        {form.parentPath}
-                      </InputAdornment>
-                    )
-                  }}
-                />
-              </Grid>
-            </Grid>
             <Grid container className={buttonWrap}>
+              <Grid item container xs={12}>
+                <ul>
+                  <li>{form.selected.key}</li>
+                </ul>
+              </Grid>
               <Grid item container xs={12} justify="center">
                 <Button
                   onClick={handleClose}
@@ -112,7 +93,7 @@ class NewFolderForm extends Component {
                   color="primary"
                   className={button}
                 >
-                  저장
+                  삭제
                 </Button>
               </Grid>
             </Grid>
@@ -123,4 +104,4 @@ class NewFolderForm extends Component {
   }
 }
 
-export default withStyles(styles)(NewFolderForm);
+export default withStyles(styles)(DeleteForm);

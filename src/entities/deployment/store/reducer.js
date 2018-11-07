@@ -12,6 +12,7 @@ const GET_DEPLOYMENT = "deployment/GET_FILEMANAGER";
 const UPLOAD_DEPLOYMENT = "deployment/UPLOAD_DEPLOYMENT";
 const CHANGE_INPUT = "deployment/CHANGE_INPUT";
 const NEWFOLDER_DEPLOYMENT = "deployment/NEWFOLDER_DEPLOYMENT";
+const DEL_DEPLOYMENT = "deployment/DEL_DEPLOYMENT";
 //=============================================================================
 
 // action creators
@@ -25,6 +26,7 @@ export const newFolderDeployment = createAction(
   NEWFOLDER_DEPLOYMENT,
   api.newFolderDeployment
 );
+export const delDeployment = createAction(DEL_DEPLOYMENT, api.delDeployment);
 //=============================================================================
 
 // reducer define
@@ -37,6 +39,7 @@ const reduceInfo = (draft, action) => {
 };
 const reduceUpload = () => {};
 const reduceAdd = () => {};
+const reduceDel = () => {};
 //=============================================================================
 
 // reducer
@@ -48,7 +51,8 @@ export default handleActions(
       const { name, value } = action.payload;
       draft.form[name] = value;
     }),
-    ...pender(im(NEWFOLDER_DEPLOYMENT, reduceAdd))
+    ...pender(im(NEWFOLDER_DEPLOYMENT, reduceAdd)),
+    ...pender(im(DEL_DEPLOYMENT, reduceDel))
   },
   defaults
 );

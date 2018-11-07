@@ -12,7 +12,8 @@ import {
   FileTree,
   List,
   UploadForm,
-  NewFolderForm
+  NewFolderForm,
+  DeleteForm
 } from "../components";
 
 import * as actions from "../store/reducer";
@@ -31,6 +32,14 @@ class Panel extends Component {
   //===========================================================================
 
   /**
+   * 트리 관련 이벤트.
+   */
+  handleReloadTree = () => {
+    this._fileTree.handleReload();
+  };
+  //===========================================================================
+
+  /**
    * 신규등록폼 관련 이벤트.
    */
   handleOpenUplaodForm = () => {
@@ -41,8 +50,16 @@ class Panel extends Component {
   /**
    * 수정폼 관련 이벤트.
    */
-  handleOpenNewFolderForm = path => {
-    this._newFolderForm.handleOpen(path);
+  handleOpenNewFolderForm = () => {
+    this._newFolderForm.handleOpen();
+  };
+  //===========================================================================
+
+  /**
+   * 삭제폼 관련 이벤트.
+   */
+  handleOpenDeleteForm = () => {
+    this._deleteForm.handleOpen();
   };
   //===========================================================================
 
@@ -69,7 +86,12 @@ class Panel extends Component {
   //===========================================================================
 
   render() {
-    const { handleOpenUplaodForm, handleOpenNewFolderForm } = this;
+    const {
+      handleReloadTree,
+      handleOpenUplaodForm,
+      handleOpenNewFolderForm,
+      handleOpenDeleteForm
+    } = this;
     const {
       classes,
       fileList,
@@ -85,10 +107,13 @@ class Panel extends Component {
         <Grid container>
           <Grid item container xs={3} className={treeWrap}>
             <FileTree
+              innerRef={node => (this._fileTree = node)}
               fileList={fileList}
+              form={form}
               Actions={Actions}
               handleOpenUploadForm={handleOpenUplaodForm}
               handleOpenNewFolderForm={handleOpenNewFolderForm}
+              handleOpenDeleteForm={handleOpenDeleteForm}
             />
           </Grid>
           <Grid item container xs={9}>
@@ -97,9 +122,11 @@ class Panel extends Component {
         </Grid>
         <UploadForm
           innerRef={node => (this._uploadForm = node)}
+          form={form}
           result={result}
           Actions={Actions}
           handleSendMsg={handleSendMsg}
+          handleReloadTree={handleReloadTree}
         />
         <NewFolderForm
           innerRef={node => (this._newFolderForm = node)}
@@ -107,6 +134,15 @@ class Panel extends Component {
           result={result}
           Actions={Actions}
           handleSendMsg={handleSendMsg}
+          handleReloadTree={handleReloadTree}
+        />
+        <DeleteForm
+          innerRef={node => (this._deleteForm = node)}
+          form={form}
+          result={result}
+          Actions={Actions}
+          handleSendMsg={handleSendMsg}
+          handleReloadTree={handleReloadTree}
         />
       </section>
     );

@@ -8,7 +8,8 @@ const defaults = {
   fileList: [],
   form: {
     parentPath: "",
-    folderName: ""
+    folderName: "",
+    selected: {}
   },
   loading: false
 };

@@ -41,11 +41,12 @@ class UploadForm extends Component {
   //===========================================================================
 
   handleSubmit = async () => {
-    const { Actions, handleSendMsg } = this.props;
+    const { form, Actions, handleSendMsg, handleReloadTree } = this.props;
     if (this._dropZone.handleGetFiles().length > 0)
       try {
-        await Actions.uploadDeployment({}, this._dropZone.handleGetFiles());
+        await Actions.uploadDeployment(form, this._dropZone.handleGetFiles());
         if (this.props.result.key === Result.SUCCESS) {
+          handleReloadTree();
           this.handleClose();
         } else {
           handleSendMsg(this.props.result);
@@ -59,7 +60,7 @@ class UploadForm extends Component {
 
   render() {
     const { handleClose, handleSubmit } = this;
-    const { classes } = this.props;
+    const { classes, form } = this.props;
     const { buttonWrap, button } = classes;
     return (
       <Dialog
@@ -72,6 +73,8 @@ class UploadForm extends Component {
           <DialogContentText>
             사각형 박스에 파일들을 드래그&드롭 하거나 클릭해서
             선택하세요.(용량제한 : 1mb)
+            <br />
+            업로드 위치 ({form.parentPath})
           </DialogContentText>
           <ValidationForm onSubmit={handleSubmit}>
             <DropZone innerRef={node => (this._dropZone = node)} />

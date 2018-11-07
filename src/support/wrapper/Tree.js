@@ -1,42 +1,75 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 
 import Tree from "rc-tree";
 import "rc-tree/assets/index.css";
 
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+
 class TreeView extends Component {
   state = {
-    selected: []
+    anchorEl: null,
+    selectedKeys: [],
+    selectedInfo: {}
   };
   //===========================================================================
-  onExpand = expandedKeys => {
+  handleExpand = expandedKeys => {
     //console.log('onExpand', expandedKeys, arguments);
   };
-  onSelect = info => {
+  handleSelect = (info, { selected, node }) => {
     this.setState({
-      selected: info
+      selectedKeys: info,
+      selectedInfo: { key: info[0], leaf: node.props.isLeaf }
     });
   };
-  onRightClick = info => {
-    //console.log('right click', info.node.props);
+  handleRightClick = info => {
+    this.setState({
+      anchorEl: info.event.currentTarget,
+      selectedKeys: [info.node.props.eventKey],
+      selectedInfo: {
+        key: info.node.props.eventKey,
+        leaf: info.node.props.isLeaf
+      }
+    });
   };
   handleSelectInfo = () => {
-    return this.state.selected;
+    return this.state.selectedInfo;
+  };
+  //===========================================================================
+
+  handleClose = () => {
+    this.setState({ anchorEl: null });
+  };
+  handleDelete = () => {
+    this.props.handleDelete(this.handleSelectInfo());
+    this.handleClose();
   };
   //===========================================================================
 
   render() {
+    const { anchorEl } = this.state;
     return (
-      <Tree
-        className="myCls"
-        showLine
-        checkable={false}
-        selectable
-        defaultExpandAll={false}
-        onExpand={this.onExpand}
-        onSelect={this.onSelect}
-        onRightClick={this.onRightClick}
-        treeData={this.props.data}
-      />
+      <Fragment>
+        <Tree
+          className="myCls"
+          showLine
+          checkable={false}
+          defaultExpandAll={false}
+          onExpand={this.handleExpand}
+          onSelect={this.handleSelect}
+          onRightClick={this.handleRightClick}
+          treeData={this.props.data}
+          selectedKeys={this.state.selectedKeys}
+        />
+        <Menu
+          id="simple-menu"
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={this.handleClose}
+        >
+          <MenuItem onClick={this.handleDelete}>삭제</MenuItem>
+        </Menu>
+      </Fragment>
     );
   }
 }
