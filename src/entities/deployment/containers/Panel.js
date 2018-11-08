@@ -10,7 +10,7 @@ import { withStyles } from "@material-ui/core/styles";
 import {
   Header,
   FileTree,
-  List,
+  Editor,
   UploadForm,
   NewFolderForm,
   DeleteForm
@@ -117,7 +117,7 @@ class Panel extends Component {
             />
           </Grid>
           <Grid item container xs={9}>
-            <List />
+            <Editor />
           </Grid>
         </Grid>
         <UploadForm

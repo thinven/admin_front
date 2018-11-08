@@ -14,13 +14,13 @@ let s = Object.assign({}, dft);
 
 const Security = {
   encG: function(data) {
-    const RK = localStorage.getItem("RK");
+    const rk = localStorage.getItem("rk");
     if (typeof data === "object") {
       data = Object.assign(
         {},
         data,
         {
-          rk: RK || "guest"
+          rk: rk || "guest"
         } || {}
       );
       s = Object.assign({}, dft, data);
@@ -36,18 +36,18 @@ const Security = {
       ? {
           p1: encrypted.toString(),
           p2: encrypt2(kyhex + "," + ivhex),
-          p3: encrypt3(RK || "guest")
+          p3: encrypt3(rk || "guest")
         }
       : data;
   },
   encP: function(data) {
-    const RK = localStorage.getItem("RK");
+    const rk = localStorage.getItem("rk");
     if (typeof data === "object") {
       data = Object.assign(
         {},
         data,
         {
-          rk: RK || "guest"
+          rk: rk || "guest"
         } || {}
       );
       s = Object.assign({}, dft, data);
@@ -62,7 +62,7 @@ const Security = {
     var bodyFormData = new FormData();
     bodyFormData.set("p1", encrypted.toString());
     bodyFormData.set("p2", encrypt2(kyhex + "," + ivhex));
-    bodyFormData.set("p3", encrypt3(RK || "guest"));
+    bodyFormData.set("p3", encrypt3(rk || "guest"));
     //console.log("data", data);
     //console.log("bodyFormData", bodyFormData);
     return data ? bodyFormData : data;
@@ -85,8 +85,8 @@ function encrypt(data) {
 }
 
 function encrypt2(value) {
-  const PKM2 = localStorage.getItem("PKM2");
-  const PKE2 = localStorage.getItem("PKE2");
+  const PKM2 = localStorage.getItem("pkm2");
+  const PKE2 = localStorage.getItem("pke2");
   if (PKM2) {
     var rsa = new RSAKey();
     rsa.setPublic(PKM2, PKE2);

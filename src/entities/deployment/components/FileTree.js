@@ -6,6 +6,7 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import CreateNewFolderIcon from "@material-ui/icons/CreateNewFolder";
 import CachedIcon from "@material-ui/icons/Cached";
 import Tooltip from "@material-ui/core/Tooltip";
+import Grid from "@material-ui/core/Grid";
 
 import { TreeView } from "support/wrapper";
 
@@ -15,6 +16,9 @@ const styles = theme => ({
   },
   button: {
     margin: theme.spacing.unit
+  },
+  paper: {
+    width: "100%"
   }
 });
 
@@ -73,26 +77,32 @@ class FileTree extends Component {
     } = this;
     return (
       <Fragment>
-        <Tooltip title="파일 업로드폼">
-          <IconButton onClick={handleUploadForm}>
-            <CloudUploadIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="폴더 생성폼">
-          <IconButton onClick={handleNewFolderForm}>
-            <CreateNewFolderIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="트리정보 새로고침">
-          <IconButton onClick={handleReload}>
-            <CachedIcon />
-          </IconButton>
-        </Tooltip>
-        <TreeView
-          ref={ref => (this._tree = ref)}
-          data={this.props.fileList}
-          handleDelete={handleDelete}
-        />
+        <Grid container direction="column">
+          <Grid item container>
+            <Tooltip title="파일 업로드폼">
+              <IconButton onClick={handleUploadForm}>
+                <CloudUploadIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="폴더 생성폼">
+              <IconButton onClick={handleNewFolderForm}>
+                <CreateNewFolderIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="트리정보 새로고침">
+              <IconButton onClick={handleReload}>
+                <CachedIcon />
+              </IconButton>
+            </Tooltip>
+          </Grid>
+          <Grid item container>
+            <TreeView
+              ref={ref => (this._tree = ref)}
+              data={this.props.fileList}
+              handleDelete={handleDelete}
+            />
+          </Grid>
+        </Grid>
       </Fragment>
     );
   }
