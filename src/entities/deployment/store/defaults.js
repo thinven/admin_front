@@ -9,7 +9,8 @@ const defaults = {
   form: {
     parentPath: "",
     folderName: "",
-    selected: {}
+    selected: {},
+    text: ""
   },
   loading: false
 };

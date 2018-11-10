@@ -9,6 +9,7 @@ import { Immer as im } from "support/utils";
 
 // action types
 const GET_DEPLOYMENT = "deployment/GET_FILEMANAGER";
+const GET_DEPLOYMENT_TEXT = "deployment/GET_DEPLOYMENT_TEXT";
 const UPLOAD_DEPLOYMENT = "deployment/UPLOAD_DEPLOYMENT";
 const CHANGE_INPUT = "deployment/CHANGE_INPUT";
 const NEWFOLDER_DEPLOYMENT = "deployment/NEWFOLDER_DEPLOYMENT";
@@ -17,6 +18,10 @@ const DEL_DEPLOYMENT = "deployment/DEL_DEPLOYMENT";
 
 // action creators
 export const getDeployment = createAction(GET_DEPLOYMENT, api.getDeployment);
+export const getDeploymentText = createAction(
+  GET_DEPLOYMENT_TEXT,
+  api.getDeploymentText
+);
 export const uploadDeployment = createAction(
   UPLOAD_DEPLOYMENT,
   api.uploadDeployment
@@ -37,6 +42,10 @@ const reduceInfo = (draft, action) => {
     loading: false
   });
 };
+const reduceText = (draft, action) => {
+  const { filetext } = action.payload.data;
+  draft.form.text = filetext;
+};
 const reduceUpload = () => {};
 const reduceAdd = () => {};
 const reduceDel = () => {};
@@ -52,7 +61,8 @@ export default handleActions(
       draft.form[name] = value;
     }),
     ...pender(im(NEWFOLDER_DEPLOYMENT, reduceAdd)),
-    ...pender(im(DEL_DEPLOYMENT, reduceDel))
+    ...pender(im(DEL_DEPLOYMENT, reduceDel)),
+    ...pender(im(GET_DEPLOYMENT_TEXT, reduceText))
   },
   defaults
 );

@@ -3,6 +3,9 @@ import { upload } from "../../../support/wrapper";
 
 export const getDeployment = deployment => get("/deployment", deployment);
 
+export const getDeploymentText = deployment =>
+  get("/deployment/text", deployment);
+
 export const addDeployment = deployment => post("/deployment", deployment);
 
 export const patchDeployment = deployment => patch("/deployment", deployment);

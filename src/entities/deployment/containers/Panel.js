@@ -110,14 +110,16 @@ class Panel extends Component {
               innerRef={node => (this._fileTree = node)}
               fileList={fileList}
               form={form}
+              result={result}
               Actions={Actions}
               handleOpenUploadForm={handleOpenUplaodForm}
               handleOpenNewFolderForm={handleOpenNewFolderForm}
               handleOpenDeleteForm={handleOpenDeleteForm}
+              handleSendMsg={handleSendMsg}
             />
           </Grid>
           <Grid item container xs={9}>
-            <Editor />
+            <Editor innerRef={node => (this._editor = node)} form={form} />
           </Grid>
         </Grid>
         <UploadForm

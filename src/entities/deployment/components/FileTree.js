@@ -9,6 +9,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import Grid from "@material-ui/core/Grid";
 
 import { TreeView } from "support/wrapper";
+import { Result } from "common/constant";
 
 const styles = theme => ({
   buttonWrap: {
@@ -28,6 +29,9 @@ class FileTree extends Component {
   };
   //===========================================================================
 
+  /**
+   * 외부(다른 컴포넌트)와 연계
+   */
   handleUploadForm = () => {
     this.handleChangeInput();
     this.props.handleOpenUploadForm();
@@ -52,8 +56,17 @@ class FileTree extends Component {
     const { Actions } = this.props;
     await Actions.getDeployment({});
   };
+  handleLoadText = selected => {
+    const { Actions, handleSendMsg } = this.props;
+    Actions.getDeploymentText({ selected });
+    if (this.props.result.key !== Result.SUCCESS)
+      handleSendMsg(this.props.result);
+  };
   //===========================================================================
 
+  /**
+   * 자체 로직
+   */
   handleDelete = selected => {
     this.handleDeleteForm();
     const { Actions } = this.props;
@@ -73,7 +86,8 @@ class FileTree extends Component {
       handleUploadForm,
       handleNewFolderForm,
       handleReload,
-      handleDelete
+      handleDelete,
+      handleLoadText
     } = this;
     return (
       <Fragment>
@@ -100,6 +114,7 @@ class FileTree extends Component {
               ref={ref => (this._tree = ref)}
               data={this.props.fileList}
               handleDelete={handleDelete}
+              handleLoadText={handleLoadText}
             />
           </Grid>
         </Grid>

@@ -5,6 +5,7 @@ import { withStyles } from "@material-ui/core/styles";
 import { UnControlled as CodeMirror } from "react-codemirror2";
 import "codemirror/lib/codemirror.css";
 import "codemirror/theme/material.css";
+import "./editor.css";
 
 const styles = theme => ({
   codeMirror: {
@@ -14,11 +15,11 @@ const styles = theme => ({
 
 class Editor extends Component {
   render() {
-    const { classes } = this.props;
+    const { classes, form } = this.props;
     const { codeMirror } = classes;
     return (
       <CodeMirror
-        value="<h1>I ♥ react-codemirror2</h1>"
+        value={form.text}
         options={{
           mode: "xml",
           theme: "material",

@@ -17,9 +17,11 @@ class TreeView extends Component {
     //console.log('onExpand', expandedKeys, arguments);
   };
   handleSelect = (info, { selected, node }) => {
+    let selectedInfo = { key: info[0], leaf: node.props.isLeaf };
+    if (node.props.isLeaf) this.props.handleLoadText(selectedInfo);
     this.setState({
       selectedKeys: info,
-      selectedInfo: { key: info[0], leaf: node.props.isLeaf }
+      selectedInfo
     });
   };
   handleRightClick = info => {
