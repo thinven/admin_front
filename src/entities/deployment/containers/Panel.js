@@ -64,24 +64,11 @@ class Panel extends Component {
   //===========================================================================
 
   /**
-   * 삭제 관련 이벤트.
+   * 에디터 내용 저장 이벤트.
    */
-  handleDeleteConfirm = original => {
-    const { Actions, handleConfirm } = this.props;
-    Actions.loadEmployee({
-      info: original
-    });
-    handleConfirm({
-      title: "삭제 알림",
-      desc: original.id + "님을 삭제 하시겠습니까?",
-      onOk: async () => {
-        try {
-          await Actions.delEmployee(original);
-        } catch (e) {
-          console.log(e);
-        }
-      }
-    });
+  handleSave = () => {
+    const { form, Actions } = this.props;
+    Actions.patchDeploymentText(form);
   };
   //===========================================================================
 
@@ -90,12 +77,14 @@ class Panel extends Component {
       handleReloadTree,
       handleOpenUplaodForm,
       handleOpenNewFolderForm,
-      handleOpenDeleteForm
+      handleOpenDeleteForm,
+      handleSave
     } = this;
     const {
       classes,
       fileList,
       form,
+      editor,
       result,
       Actions,
       handleSendMsg
@@ -103,7 +92,7 @@ class Panel extends Component {
     const { contentWrap, treeWrap } = classes;
     return (
       <section className={contentWrap}>
-        <Header handleOpenForm={handleOpenUplaodForm} />
+        <Header handleSave={handleSave} />
         <Grid container>
           <Grid item container xs={3} className={treeWrap}>
             <FileTree
@@ -119,7 +108,12 @@ class Panel extends Component {
             />
           </Grid>
           <Grid item container xs={9}>
-            <Editor innerRef={node => (this._editor = node)} form={form} />
+            <Editor
+              innerRef={node => (this._editor = node)}
+              form={form}
+              editor={editor}
+              Actions={Actions}
+            />
           </Grid>
         </Grid>
         <UploadForm
@@ -157,7 +151,8 @@ export default compose(
     ({ deploymentReducer }) => ({
       result: deploymentReducer.result,
       fileList: deploymentReducer.fileList,
-      form: deploymentReducer.form
+      form: deploymentReducer.form,
+      editor: deploymentReducer.editor
     }),
     dispatch => ({
       Actions: bindActionCreators(actions, dispatch)

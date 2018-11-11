@@ -10,8 +10,10 @@ const defaults = {
     parentPath: "",
     folderName: "",
     selected: {},
-    text: ""
+    text: "",
+    textKey: ""
   },
+  editor: 0, //에디터의 렌더링 시점을 조정하기위한 변수
   loading: false
 };
 

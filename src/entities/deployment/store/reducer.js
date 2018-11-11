@@ -5,7 +5,7 @@ import { pender } from "redux-pender";
 import * as api from "./api";
 import defaults from "./defaults";
 
-import { Immer as im } from "support/utils";
+import { Security, Immer as im } from "support/utils";
 
 // action types
 const GET_DEPLOYMENT = "deployment/GET_FILEMANAGER";
@@ -13,6 +13,7 @@ const GET_DEPLOYMENT_TEXT = "deployment/GET_DEPLOYMENT_TEXT";
 const UPLOAD_DEPLOYMENT = "deployment/UPLOAD_DEPLOYMENT";
 const CHANGE_INPUT = "deployment/CHANGE_INPUT";
 const NEWFOLDER_DEPLOYMENT = "deployment/NEWFOLDER_DEPLOYMENT";
+const PATCH_DEPLOYMENT_TEXT = "deployment/PATCH_DEPLOYMENT_TEXT";
 const DEL_DEPLOYMENT = "deployment/DEL_DEPLOYMENT";
 //=============================================================================
 
@@ -31,6 +32,10 @@ export const newFolderDeployment = createAction(
   NEWFOLDER_DEPLOYMENT,
   api.newFolderDeployment
 );
+export const patchDeploymentText = createAction(
+  PATCH_DEPLOYMENT_TEXT,
+  api.patchDeploymentText
+);
 export const delDeployment = createAction(DEL_DEPLOYMENT, api.delDeployment);
 //=============================================================================
 
@@ -45,9 +50,11 @@ const reduceInfo = (draft, action) => {
 const reduceText = (draft, action) => {
   const { filetext } = action.payload.data;
   draft.form.text = filetext;
+  draft.editor = Security.generateKey();
 };
 const reduceUpload = () => {};
 const reduceAdd = () => {};
+const reducePatchText = () => {};
 const reduceDel = () => {};
 //=============================================================================
 
@@ -55,14 +62,15 @@ const reduceDel = () => {};
 export default handleActions(
   {
     ...pender(im(GET_DEPLOYMENT, reduceInfo)),
+    ...pender(im(GET_DEPLOYMENT_TEXT, reduceText)),
     ...pender(im(UPLOAD_DEPLOYMENT, reduceUpload)),
     [CHANGE_INPUT]: im((draft, action) => {
       const { name, value } = action.payload;
       draft.form[name] = value;
     }),
     ...pender(im(NEWFOLDER_DEPLOYMENT, reduceAdd)),
-    ...pender(im(DEL_DEPLOYMENT, reduceDel)),
-    ...pender(im(GET_DEPLOYMENT_TEXT, reduceText))
+    ...pender(im(PATCH_DEPLOYMENT_TEXT, reducePatchText)),
+    ...pender(im(DEL_DEPLOYMENT, reduceDel))
   },
   defaults
 );

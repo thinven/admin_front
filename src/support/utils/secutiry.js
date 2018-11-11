@@ -71,7 +71,8 @@ const Security = {
     let bodyFormData = this.encP(data);
     for (let idx in files) bodyFormData.append("files", files[idx]);
     return data ? bodyFormData : data;
-  }
+  },
+  generateKey: generateKey
 };
 
 function encrypt(data) {

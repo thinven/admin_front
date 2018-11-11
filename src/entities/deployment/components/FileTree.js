@@ -9,7 +9,6 @@ import Tooltip from "@material-ui/core/Tooltip";
 import Grid from "@material-ui/core/Grid";
 
 import { TreeView } from "support/wrapper";
-import { Result } from "common/constant";
 
 const styles = theme => ({
   buttonWrap: {
@@ -57,10 +56,14 @@ class FileTree extends Component {
     await Actions.getDeployment({});
   };
   handleLoadText = selected => {
-    const { Actions, handleSendMsg } = this.props;
-    Actions.getDeploymentText({ selected });
-    if (this.props.result.key !== Result.SUCCESS)
-      handleSendMsg(this.props.result);
+    if (selected.key) {
+      const { Actions } = this.props;
+      Actions.changeInput({
+        name: "textKey",
+        value: selected.key
+      });
+      Actions.getDeploymentText({ selected });
+    }
   };
   //===========================================================================
 

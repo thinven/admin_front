@@ -14,9 +14,22 @@ const styles = theme => ({
 });
 
 class Editor extends Component {
+  shouldComponentUpdate(nextProps, nextState) {
+    if (this.props.editor !== nextProps.editor) return true;
+    return false;
+  }
+  //===========================================================================
+  handleChangeInput = (editor, data, value) => {
+    const { Actions } = this.props;
+    Actions.changeInput({ name: "text", value });
+  };
+  //===========================================================================
+
   render() {
+    const { handleChangeInput } = this;
     const { classes, form } = this.props;
     const { codeMirror } = classes;
+    console.log("Editor!!!", form);
     return (
       <CodeMirror
         value={form.text}
@@ -25,7 +38,7 @@ class Editor extends Component {
           theme: "material",
           lineNumbers: true
         }}
-        onChange={(editor, data, value) => {}}
+        onChange={handleChangeInput}
         className={codeMirror}
       />
     );
