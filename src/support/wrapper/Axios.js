@@ -4,7 +4,7 @@ import { Security } from "support/utils";
 
 const config = () => ({
   headers: {
-    "x-auth-token": localStorage.getItem("rk")
+    "x-auth-token": localStorage.getItem("rk") || "guest"
   }
 });
 
@@ -23,7 +23,7 @@ export const del = (url, data) =>
 export const upload = (url, data, files) =>
   axios.post(url, Security.encU(data, files), {
     headers: {
-      "x-auth-token": localStorage.getItem("rk"),
+      "x-auth-token": localStorage.getItem("rk") || "guest",
       "Content-Type": "multipart/form-data",
       "X-Requested-With": "XMLHttpRequest"
     }

@@ -1,4 +1,4 @@
 import { get } from "support/wrapper";
 
 export const getEmployeeAuth = employeeAuth =>
-  get("/employeeAuth", employeeAuth);
+  get("/api/employeeAuth", employeeAuth);
